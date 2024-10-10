@@ -1,16 +1,7 @@
-import { Appbar } from "@/components/Appbar";
-import { NEXT_AUTH_CONFIG } from "@/lib/auth";
-import getServerSession from "next-auth";
 import { Poppins } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { LoginButton } from "@/components/auth/login-button";
-
-async function getUser() {
-  const session = await getServerSession(NEXT_AUTH_CONFIG);
-  console.log(session);
-  return session;
-}
 
 const font = Poppins({
   subsets: ["latin"],
@@ -18,10 +9,7 @@ const font = Poppins({
 })
 
 export default async function Home() {
-  const session = await getUser();
-
   return (
-
     <main className="flex h-full flex-col items-center justify-center bg-purple-800">
       <div className="space-y-6 text-center">
         <h1 className={cn(
@@ -42,10 +30,5 @@ export default async function Home() {
         </div>
       </div>
     </main>
-
-    // <div className="text-slate-100">
-    //   <Appbar />
-    //   {JSON.stringify(session)}
-    // </div>
   );
 }
