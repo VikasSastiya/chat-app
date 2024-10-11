@@ -1,7 +1,8 @@
 "use client";
 
 import { CardWrapper } from "@/components/auth/card-wrapper";
-import { BarLoader, BeatLoader, ClockLoader, PacmanLoader, PropagateLoader, RingLoader } from "react-spinners";
+// import { BarLoader, BeatLoader, ClockLoader, PacmanLoader, PropagateLoader, RingLoader } from "react-spinners";
+import { RingLoader } from "react-spinners";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { newVerification } from "@/actions/new-verification";

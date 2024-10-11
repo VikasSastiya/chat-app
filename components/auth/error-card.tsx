@@ -1,13 +1,11 @@
-import Link from "next/link"
-import { AlertTriangle } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
+import Link from "next/link";
+import { AlertTriangle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const ErrorCard = () => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="relative w-full max-w-md mx-auto">
-        {/* Background pattern */}
         <div className="absolute inset-0 bg-grid-primary/5 [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
         
         <div className="relative bg-card text-card-foreground rounded-lg shadow-lg p-8 border border-primary/10">
@@ -16,7 +14,7 @@ export const ErrorCard = () => {
             
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tighter">Oops, something went wrong</h1>
-              <p className="text-muted-foreground">We're sorry, but an error has occurred.</p>
+              <p className="text-muted-foreground">We&apos;re sorry, but an error has occurred.</p> {/* Fixed line */}
             </div>
             
             <Button asChild className="px-6 py-2 text-sm font-medium transition-all duration-300 ease-in-out">
@@ -37,5 +35,5 @@ export const ErrorCard = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
