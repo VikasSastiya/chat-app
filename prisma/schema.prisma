@@ -6,50 +6,88 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
- 
+
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
-  image         String?
-  password      String?
-  accounts      Account[]
+  id                    String          @id @default(cuid())
+  name                  String?
+  email                 String?         @unique
+  emailVerified         DateTime?       @map("email_verified")
+  image                 String?
+  password              String?
+  accounts              Account[]
+  sessions              Session[]
+
+  // to send or receive requests
+  friendRequestsSent     FriendRequest[] @relation("RequestsSent")
+  friendRequestsReceived FriendRequest[] @relation("RequestsReceived")
+  friendships1           Friendship[]    @relation("User1")
+  friendships2           Friendship[]    @relation("User2")
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String  @map("user_id")
-  type               String
-  provider           String
-  providerAccountId  String  @map("provider_account_id")
-  refresh_token      String? @db.Text
-  access_token       String? @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String? @db.Text
-  session_state      String?
- 
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@unique([provider, providerAccountId])
 }
 
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model VerificationToken {
-  id      String @id @default(cuid())
-  email   String 
-  token   String @unique
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
   expires DateTime
 
   @@unique([email, token])
 }
 
 model PasswordResetToken {
-  id      String @id @default(cuid())
-  email   String 
-  token   String @unique
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
   expires DateTime
 
   @@unique([email, token])
+}
+
+model FriendRequest {
+  id         String @id @default(uuid())
+  senderId   String
+  receiverId String
+
+  sender   User @relation("RequestsSent", fields: [senderId], references: [id])
+  receiver User @relation("RequestsReceived", fields: [receiverId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Friendship {
+  id      String @id @default(uuid())
+  userId1 String
+  userId2 String
+
+  user1   User @relation("User1", fields: [userId1], references: [id], onDelete: Cascade)
+  user2   User @relation("User2", fields: [userId2], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
 }

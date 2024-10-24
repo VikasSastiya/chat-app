@@ -32,4 +32,3 @@ export const RegisterSchema = z.object({
         message: "Name is required"
     })
 });
-

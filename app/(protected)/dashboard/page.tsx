@@ -1,4 +1,4 @@
-import { auth, signOut } from "@/auth/auth";
+import { auth, signOut } from "@/auth";
 
 const DashboardPage = async () => {
     const session = await auth();
