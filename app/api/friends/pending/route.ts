@@ -13,10 +13,25 @@ export async function GET() {
     // Get all pending requests where the current user is either sender or receiver
     const pendingRequests = await db.friendRequest.findMany({
       where: {
-        OR: [
-          { senderId: session.user.id },
-          { receiverId: session.user.id }
-        ]
+        receiverId: session.user.id  // Only get requests where the current user is the receiver
+      },
+      include: {
+        sender: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          }
+        },
+        receiver: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          }
+        }
       }
     });
 
