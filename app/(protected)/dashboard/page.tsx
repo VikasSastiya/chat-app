@@ -1,4 +1,5 @@
 import { auth, signOut } from "@/auth";
+import { TempButton } from "@/components/temporary-button";
 
 const DashboardPage = async () => {
     const session = await auth();
@@ -14,6 +15,7 @@ const DashboardPage = async () => {
                     Sign out
                 </button>
             </form>
+            <TempButton />
         </div>
     );
 }
