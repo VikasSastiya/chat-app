@@ -18,21 +18,21 @@ export async function GET(req: Request) {
         }
 
         // Debug: Log the search query and current user
-        console.log("Search Query:", query);
+        // console.log("Search Query:", query);
         console.log("Current User ID:", session.user.id);
 
         // Debug: First check if there are any users at all (excluding current user)
-        const allUsers = await db.user.findMany({
-            where: {
-                id: { not: session.user.id }
-            },
-            select: {
-                id: true,
-                name: true,
-                email: true
-            }
-        });
-        console.log("All available users:", allUsers);
+        // const allUsers = await db.user.findMany({
+        //     where: {
+        //         id: { not: session.user.id }
+        //     },
+        //     select: {
+        //         id: true,
+        //         name: true,
+        //         email: true
+        //     }
+        // });
+        // console.log("All available users:", allUsers);
 
         // Debug: Try a simpler search first
         const users = await db.user.findMany({
