@@ -4,6 +4,7 @@ import useRoutes from "@/hooks/useRoutes";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import DesktopItem from "./DesktopItem";
+import Image from "next/image";
 
 const DesktopSidebar = () => {
     const routes = useRoutes();
@@ -18,8 +19,18 @@ const DesktopSidebar = () => {
                             {user?.image ? (
                                 <AvatarImage src={user.image} alt={user.name || ''} />
                             ) : (
-                                <AvatarFallback className="bg-sky-500 text-white">
-                                    {user?.name?.[0]?.toUpperCase() || '?'}
+                                // <AvatarFallback className="bg-sky-500 text-white">
+                                //     {user?.name?.[0]?.toUpperCase() || '?'}
+                                // </AvatarFallback>
+                                <AvatarFallback>
+                                    <div className="relative h-full w-full">
+                                        <Image
+                                            src="/profile-pic.jpg"
+                                            alt={user?.name?.[0]?.toUpperCase() || '?'}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
                                 </AvatarFallback>
                             )}
                         </Avatar>

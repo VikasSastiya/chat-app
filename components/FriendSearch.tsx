@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { motion, AnimatePresence } from "framer-motion"
+import Image from 'next/image'
 
 interface User {
   id: string
@@ -216,15 +217,17 @@ export default function FriendSearch() {
                           <CardContent className="p-6 flex items-center justify-between">
                             <div className="flex items-center gap-4">
                               {user.image ? (
-                                <img
-                                  src={user.image}
-                                  alt={user.name || 'User'}
-                                  className="w-16 h-16 rounded-full border-2 border-blue-400"
-                                />
+                                  <Image
+                                      src={user.image}
+                                      alt={user.name || 'User'}
+                                      width={64} // Set the width
+                                      height={64} // Set the height
+                                      className="w-16 h-16 rounded-full border-2 border-blue-400"
+                                  />
                               ) : (
-                                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-indigo-400 flex items-center justify-center text-white text-2xl font-bold">
-                                  {user.name?.[0]?.toUpperCase() || <User className="w-8 h-8" />}
-                                </div>
+                                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-indigo-400 flex items-center justify-center text-white text-2xl font-bold">
+                                      {user.name?.[0]?.toUpperCase() || <User className="w-8 h-8" />}
+                                  </div>
                               )}
                               <div>
                                 <p className="font-semibold text-lg text-gray-800">{user.name}</p>
