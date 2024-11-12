@@ -5,11 +5,12 @@ const useConversation = () => {
     const params = useParams();
 
     const conversationId = useMemo(() => {
-        if(!params?.conversationId) {
+        // More explicit type checking
+        if (!params?.conversationId || Array.isArray(params.conversationId)) {
             return '';
         }
 
-        return params.conversationId as string;
+        return params.conversationId;
     }, [params?.conversationId]);
 
     const isOpen = useMemo(() => !!conversationId, [conversationId]);
@@ -17,7 +18,7 @@ const useConversation = () => {
     return useMemo(() => ({
         isOpen,
         conversationId
-    }), [isOpen, conversationId])  
+    }), [isOpen, conversationId]);
 };
 
 export default useConversation;

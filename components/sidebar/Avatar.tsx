@@ -1,17 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import { User } from "@prisma/client";
-// import useActiveList from "@/hooks/useActiveList";
+import useActiveList from "@/hooks/useActiveList";
 
 interface AvatarProps {
-  user?: User;
+  user?: {
+    name: string | null;
+    email: string | null;
+    image: string | null;
+  };
   size?: 'small' | 'medium' | 'large';
 }
 
-export default function Avatar({ user, size = 'medium' }: AvatarProps) {
-//   const { members } = useActiveList();
-//   const isActive = members.indexOf(user?.email!) !== -1;
+const Avatar: React.FC<AvatarProps> = ({ user, size = 'medium' }) => {
+  const { members } = useActiveList();
+  const isActive = members.indexOf(user?.email!) !== -1;
 
   const sizeClasses = {
     small: 'w-8 h-8',
@@ -19,24 +22,36 @@ export default function Avatar({ user, size = 'medium' }: AvatarProps) {
     large: 'w-12 h-12 md:w-14 md:h-14'
   };
 
-  // const statusSizeClasses = {
-  //   small: 'w-2 h-2',
-  //   medium: 'w-2 h-2 md:w-3 md:h-3',
-  //   large: 'w-3 h-3 md:w-4 md:h-4'
-  // };
+  const statusSizeClasses = {
+    small: 'w-2 h-2',
+    medium: 'w-2 h-2 md:w-3 md:h-3',
+    large: 'w-3 h-3 md:w-4 md:h-4'
+  };
+
+  const getImageSource = () => {
+    if (user?.image) {
+      return user.image;
+    }
+    return '/images/profile-pic.jpg';
+  };
 
   return (
     <div className="relative">
       <div className={`relative inline-block rounded-full overflow-hidden ${sizeClasses[size]}`}>
         <Image
-          src={user?.image || "/images/profile-pic.jpg"}
+          src={getImageSource()}
           alt={user?.name || 'Avatar'}
           fill
+          priority
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            target.src = '/images/profile-pic.jpg';
+          }}
         />
       </div>
-      {/* {isActive && (
+      {isActive && (
         <span 
           className={`
             absolute 
@@ -50,7 +65,9 @@ export default function Avatar({ user, size = 'medium' }: AvatarProps) {
             ${statusSizeClasses[size]}
           `}
         />
-      )} */}
+      )}
     </div>
   );
-}
+};
+
+export default Avatar;

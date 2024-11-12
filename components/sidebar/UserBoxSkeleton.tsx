@@ -1,23 +1,23 @@
 import { Card, CardContent } from "../ui/card";
 
 export function UserBoxSkeleton() {
-    return (
-        <div className="space-y-4 py-1">
-            <Card className="overflow-hidden animate-pulse">
-                <CardContent className="p-2">
-                    <div className="flex items-center gap-5 p-2">
-                    <div className="relative">
-                        <div className="h-12 w-12 rounded-full bg-gray-200" />
+  return (
+    <Card className="w-full">
+        <CardContent className="p-1">
+            <div className="relative w-full flex items-center gap-4 p-1 rounded-xl">
+                <div className="relative shrink-0">
+                    <div className="h-12 w-12 rounded-full bg-gray-200 dark:bg-gray-800 ring-2 ring-offset-2 ring-gray-100 dark:ring-gray-800" />
+                </div>
+
+                <div className="min-w-0 flex-1">
+                    <div className="flex justify-between items-center mb-1.5">
+                        <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-20" />
+                        {/* <div className="h-3 bg-gray-200 dark:bg-gray-800 rounded w-10" /> */}
                     </div>
-                    <div className="flex flex-col space-y-2 flex-1">
-                        <div className="h-4 bg-gray-200 rounded w-3/4" />
-                        <div className="h-3 bg-gray-200 rounded w-1/2" />
-                    </div>
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
-    )
-  }
-  
-  
+                    <div className="h-3.5 bg-gray-200 dark:bg-gray-800 rounded w-28" />
+                </div>
+            </div>
+        </CardContent>
+    </Card>
+  );
+}

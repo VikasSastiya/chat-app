@@ -8,11 +8,11 @@ export const TempButton = () => {
   const router = useRouter()
 
   const handleAddRedirect = () => {
-    router.push("/dashboard/add")
+    router.push("/conversations/add")
   }
 
   const handleRequestsRedirect = () => {
-    router.push("/dashboard/requests")
+    router.push("/conversations/requests")
   }
   
   return (

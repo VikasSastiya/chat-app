@@ -16,12 +16,19 @@ model User {
   password              String?
   accounts              Account[]
   sessions              Session[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   // to send or receive requests
   friendRequestsSent     FriendRequest[] @relation("RequestsSent")
   friendRequestsReceived FriendRequest[] @relation("RequestsReceived")
   friendships1           Friendship[]    @relation("User1")
   friendships2           Friendship[]    @relation("User2")
+
+  // one on one or group chat 
+  conversations    Conversation[] @relation("UserConversations")
+  messages        Message[]      @relation("UserMessages")
+  seenMessages    Message[]      @relation("MessageSeen")
 }
 
 model Account {
@@ -90,4 +97,26 @@ model Friendship {
   user2   User @relation("User2", fields: [userId2], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
+}
+
+model Conversation {
+  id            String      @id @default(uuid())
+  createdAt     DateTime    @default(now())
+  lastMessageAt DateTime    @default(now())
+  name          String?
+  isGroup       Boolean?    @default(false)
+  messages      Message[]
+  users         User[]      @relation("UserConversations")
+}
+
+model Message {
+  id            String       @id @default(uuid())
+  body          String?
+  image         String?
+  createdAt     DateTime     @default(now())
+  seenBy        User[]       @relation("MessageSeen")
+  conversation  Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String
+  sender        User         @relation("UserMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  senderId      String
 }
