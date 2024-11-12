@@ -19,7 +19,7 @@ interface ProfileDrawerProps {
 const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, data }) => {
     const otherUser = useOtherUser(data);
     const { members } = useActiveList();
-    const isActive = members.indexOf(otherUser?.email!) !== -1;
+    const isActive = members.indexOf(otherUser?.email ?? '') !== -1;
     const [confirmOpen, setConfirmOpen] = useState(false);
 
     const joinedDate = useMemo(() => {
@@ -165,6 +165,18 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, data }) 
                     </div>
                 </div>
             </div>
+            {confirmOpen && (
+                <Dialog
+                    as="div"
+                    open={confirmOpen}
+                    onClose={() => setConfirmOpen(false)}
+                >
+                    {/* Confirmation dialog content goes here */}
+                    <div>Are you sure you want to delete?</div>
+                    <button onClick={() => {/* handle delete */}}>Yes</button>
+                    <button onClick={() => setConfirmOpen(false)}>No</button>
+                </Dialog>
+            )}
         </Dialog>
     );
 };

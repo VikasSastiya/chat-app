@@ -1,11 +1,13 @@
 "use client"
+
 import React from 'react';
 import useConversation from "@/hooks/useConversation";
 import {FieldValues, SubmitHandler, useForm} from "react-hook-form";
 import axios from "axios";
 import {HiPaperAirplane, HiPhoto} from "react-icons/hi2";
 import MessageInput from '@/components/conversations/MessageInput';
-import { CldUploadButton } from "next-cloudinary"
+import { CldUploadButton, CloudinaryUploadWidgetResults } from "next-cloudinary"
+// import { CloudinaryResult } from '@/types';
 
 const Form = () => {
     const { conversationId } = useConversation();
@@ -25,11 +27,13 @@ const Form = () => {
         })
     };
 
-    const handleUpload = (result: any) => {
-        axios.post('/api/messages', {
-            image: result?.info?.secure_url,
-            conversationId
-        })
+    const handleUpload = (result: CloudinaryUploadWidgetResults) => {
+        if (result?.info && typeof result.info !== "string") {
+            axios.post('/api/messages', {
+                image: result.info.secure_url,
+                conversationId
+            });
+        }
     }
 
     return (
@@ -44,7 +48,7 @@ const Form = () => {
             <form onSubmit={handleSubmit(onSubmit)}
                 className={"flex items-center gap-2 lg:gap-4 w-full"}
             >
-                <MessageInput id={"message"} register={register} errors={errors} required placeholder={"White a message"} />
+                <MessageInput id={"message"} register={register} errors={errors} required placeholder={"Write a message"} />
                 <button type={"submit"} className={"rounded-full p-2 bg-sky-500 cursor-pointer hover:bg-sky-600 transition"}>
                     <HiPaperAirplane size={18} className={"text-white"} />
                 </button>

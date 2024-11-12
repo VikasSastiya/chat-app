@@ -69,7 +69,7 @@ const UserBox: React.FC<UserBoxProps> = ({ data, conversations, selected }) => {
     }, [data.id, router, existingConversation]);
 
     return (
-      <Card className="w-full">
+      <Card className={clsx("w-full", { "bg-blue-100": selected })}>
           <CardContent className="p-3">
               <Button
                   variant="ghost"

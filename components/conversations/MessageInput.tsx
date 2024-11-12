@@ -10,7 +10,7 @@ interface MessageInputProps {
     errors: FieldErrors
 }
 
-const MessageInput: React.FC<MessageInputProps> = ( { placeholder, id, type, required, register, errors } ) => {
+const MessageInput: React.FC<MessageInputProps> = ( { placeholder, id, type, required, register } ) => {
     return (
         <div className={"relative w-full"}>
             <input id={id} type={type} autoComplete={id} { ...register(id, { required }) } placeholder={placeholder}

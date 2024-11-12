@@ -14,7 +14,7 @@ interface AvatarProps {
 
 const Avatar: React.FC<AvatarProps> = ({ user, size = 'medium' }) => {
   const { members } = useActiveList();
-  const isActive = members.indexOf(user?.email!) !== -1;
+  const isActive = members.indexOf(user?.email ?? '') !== -1;
 
   const sizeClasses = {
     small: 'w-8 h-8',

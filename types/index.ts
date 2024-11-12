@@ -21,3 +21,10 @@ export interface User {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export interface CloudinaryResult {
+    info: {
+      secure_url: string;
+    };
+}
+  

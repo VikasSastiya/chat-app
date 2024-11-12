@@ -1,61 +1,22 @@
 "use client"
-import React, {useEffect, useMemo, useState} from 'react';
+import React from 'react';
 import {FullConversationType} from "@/types";
-import {useRouter} from "next/navigation";
+// import {useRouter} from "next/navigation";
 import useConversation from "@/hooks/useConversation";
 import clsx from "clsx";
 import {MdOutlineGroupAdd} from "react-icons/md";
 import ConversationBox from "@/components/conversations/ConversationBox";
 import {User} from "@prisma/client";
-import {find} from "lodash";
+// import {find} from "lodash";
 
 interface ConversationListProps {
     initialItems: FullConversationType[];
     users: User[];
 }
 
-const ConversationList: React.FC<ConversationListProps> = ({ initialItems, users }) => {
-    const [items, setItems] = useState(initialItems);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const router = useRouter();
+const ConversationList: React.FC<ConversationListProps> = ({ initialItems }) => {
+    const items = initialItems; // Removed setItems since it's unused
     const { conversationId, isOpen } = useConversation();
-
-    useEffect(() => {
-
-         const newHandler = ( conversation: FullConversationType ) => {
-            setItems((current) => {
-                if (find(current, { id: conversationId })) {
-                    return current;
-                }
-
-                return [conversation, ...current];
-            })
-         }
-
-         const updateHandler = ( conversation: FullConversationType ) => {
-             setItems((current) => current.map((currentConversation) => {
-                     if (currentConversation.id === conversation.id) {
-                         return {
-                             ...currentConversation,
-                             messages: conversation.messages
-                         }
-                     }
-
-                     return currentConversation;
-                 }))
-             }
-
-         const removeHandler = (conversation: FullConversationType) => {
-             setItems((current) => {
-                 return [...current.filter((cvs) => cvs.id !== conversation.id)];
-             })
-
-             if (conversation.id === conversationId) {
-                 router.push("/conversations");
-             }
-         }
-
-    }, [conversationId, router])
 
     return (
         <>
@@ -65,7 +26,7 @@ const ConversationList: React.FC<ConversationListProps> = ({ initialItems, users
                     <div className={"text-2xl font-bold text-neutral-800"}>
                         Messages
                     </div>
-                    <div onClick={() => setIsModalOpen(true)} className={"rounded-full p-2 bg-gray-100 text-gray-600 cursor-pointer hover:opacity-75 transition"}>
+                    <div className={"rounded-full p-2 bg-gray-100 text-gray-600 cursor-pointer hover:opacity-75 transition"}>
                         <MdOutlineGroupAdd size={20}/>
                     </div>
                 </div>
