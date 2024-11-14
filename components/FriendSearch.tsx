@@ -217,13 +217,14 @@ export default function FriendSearch() {
                           <CardContent className="p-6 flex items-center justify-between">
                             <div className="flex items-center gap-4">
                               {user.image ? (
-                                  <Image
-                                      src={user.image}
-                                      alt={user.name || 'User'}
-                                      width={64} // Set the width
-                                      height={64} // Set the height
-                                      className="w-16 h-16 rounded-full border-2 border-blue-400"
-                                  />
+                                <Image
+                                  src={user.image}
+                                  alt={user.name || 'User'}
+                                  width={64}
+                                  height={64}
+                                  className="rounded-full border-2 border-blue-400 object-cover"
+                                  style={{ width: '64px', height: '64px' }}
+                                />
                               ) : (
                                   <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-indigo-400 flex items-center justify-center text-white text-2xl font-bold">
                                       {user.name?.[0]?.toUpperCase() || <User className="w-8 h-8" />}

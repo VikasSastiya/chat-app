@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from "clsx";
-import useConversation from "@/hooks/useConversation";
+import useConversation from "@/hooks/conversations/useCurrentConversation";
 import EmptyState from "@/components/Empty-state";
 
 const Home = () => {

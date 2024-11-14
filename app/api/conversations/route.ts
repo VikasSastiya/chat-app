@@ -1,4 +1,4 @@
-import getCurrentUser from "@/hooks/getCurrentUser";
+import getCurrentUser from "@/hooks/users/getCurrentUser";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { z } from "zod"; // Recommended for validation

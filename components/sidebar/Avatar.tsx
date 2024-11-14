@@ -1,14 +1,21 @@
 "use client";
 
 import Image from "next/image";
-import useActiveList from "@/hooks/useActiveList";
+import useActiveList from "@/hooks/utils/useActiveList";
+
+type SafeUser = {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  emailVerified?: Date | null;
+  image?: string | null;
+  password?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 interface AvatarProps {
-  user?: {
-    name: string | null;
-    email: string | null;
-    image: string | null;
-  };
+  user?: SafeUser | null;
   size?: 'small' | 'medium' | 'large';
 }
 

@@ -1,4 +1,4 @@
-import getCurrentUser from "@/hooks/getCurrentUser";
+import getCurrentUser from "@/hooks/users/getCurrentUser";
 import { db } from "@/lib/db";
 
 const getConversationById = async (conversationId: string) => {

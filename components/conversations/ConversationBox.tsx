@@ -2,7 +2,7 @@
 
 import React, {useCallback, useMemo} from 'react';
 import { FullConversationType } from "@/types";
-import useOtherUser from '@/hooks/useOtherUser';
+import useOtherUser from '@/hooks/users/useOtherUser';
 import {useSession} from "next-auth/react";
 import {useRouter} from "next/navigation";
 import clsx from "clsx";

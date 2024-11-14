@@ -1,7 +1,6 @@
 import Sidebar from "@/components/sidebar/Sidebar";
 import FriendList from "@/components/sidebar/FriendList";
-import getConversations from "@/hooks/getConversations";
-import getFriends from "@/hooks/getFriends";
+import getConversations from "@/hooks/conversations/getConversations";
 
 export default async function UsersLayout({
   children,
@@ -17,13 +16,11 @@ export default async function UsersLayout({
       updatedAt: new Date()
     }))
   }));
-  const friends = await getFriends();
 
   return (
     <Sidebar>
       <div className="h-full">
         <FriendList 
-          initialFriends={friends}
           conversations={conversations}
         />
         {children}

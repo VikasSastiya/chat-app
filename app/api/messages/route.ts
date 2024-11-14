@@ -1,5 +1,5 @@
 import {NextResponse} from "next/server";
-import getCurrentUser from "@/hooks/getCurrentUser";
+import getCurrentUser from "@/hooks/users/getCurrentUser";
 import { db } from "@/lib/db";
 
 export async function POST(request: Request) {

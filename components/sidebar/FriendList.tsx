@@ -1,28 +1,62 @@
 "use client";
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import UserBox from "./UserBox";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import useConversation from "@/hooks/useConversation";
+import useConversation from "@/hooks/conversations/useCurrentConversation";
 import clsx from "clsx";
-import { User } from "@prisma/client";
+// import { User } from "@prisma/client";
 import { FullConversationType } from "@/types";
+import useFriends from '@/hooks/users/useFriend';
+import { UserBoxSkeleton } from './UserBoxSkeleton';
 
 interface FriendListProps {
-  initialFriends: User[];
+  // initialFriends: User[];
   conversations: FullConversationType[];
 }
 
-export default function FriendList({ initialFriends, conversations }: FriendListProps) {
-  const [friends] = useState(initialFriends);
+export default function FriendList({ conversations }: FriendListProps) {
+  // const [friends] = useState(initialFriends);
   const [searchTerm, setSearchTerm] = useState('');
   const { isOpen } = useConversation();
+  const { friends, isLoading } = useFriends();
 
-  const filteredFriends = friends.filter(friend => 
+  const sortedFriends = useMemo(() => {
+    return [...friends].sort((friendA, friendB) => {
+      const conversationA = conversations.find(conv => 
+        conv.users.some(user => user.id === friendA.id)
+      );
+      const conversationB = conversations.find(conv => 
+        conv.users.some(user => user.id === friendB.id)
+      );
+
+      const latestMessageA = conversationA?.messages?.[conversationA.messages.length - 1];
+      const latestMessageB = conversationB?.messages?.[conversationB.messages.length - 1];
+
+      const timeA = latestMessageA?.createdAt || conversationA?.createdAt || new Date(0);
+      const timeB = latestMessageB?.createdAt || conversationB?.createdAt || new Date(0);
+
+      return new Date(timeB).getTime() - new Date(timeA).getTime();
+    });
+  }, [friends, conversations]);
+
+  const filteredFriends = sortedFriends.filter(friend => 
     friend.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     friend.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (isLoading) {
+    return (
+      <aside className="fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80 lg:block overflow-y-auto border-r border-gray-200 block w-full left-0">
+        <div className="px-5 mt-16">
+          {[...Array(5)].map((_, i) => (
+            <UserBoxSkeleton key={i} />
+          ))}
+        </div>
+      </aside>
+    );
+  }
 
   return (
     <aside className={clsx(

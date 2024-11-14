@@ -1,4 +1,4 @@
-import getCurrentUser from "./getCurrentUser";
+import getCurrentUser from "@/hooks/users/getCurrentUser";
 import { db } from "@/lib/db";
 
 export default async function getFriends() {

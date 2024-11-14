@@ -1,5 +1,5 @@
-import getConversationById from "@/hooks/getConversationById";
-import getMessages from "@/hooks/getMessages";
+import getConversationById from "@/hooks/conversations/getConversationById";
+import getMessages from "@/hooks/messages/getMessages";
 import EmptyState from "@/components/Empty-state";
 import Header from "@/components/conversations/Header";
 import Body from "@/components/conversations/Body";

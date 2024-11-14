@@ -10,23 +10,25 @@ interface DesktopItemProps {
     href: string;
     onClick?: () => void;
     active?: boolean;
+    notificationCount?: number;
 }
 
 const DesktopItem: React.FC<DesktopItemProps> = ({
-    label,
+    // label,
     icon: Icon,
     href,
     onClick,
-    active
+    active,
+    notificationCount = 0
 }) => {
     const handleClick = () => {
-        if(onClick) {
+        if (onClick) {
             return onClick();
         }
     }
 
     return (
-        <li onClick={handleClick}>
+        <li onClick={handleClick} className="relative">
             <Link
                 href={href}
                 className={clsx(`
@@ -45,8 +47,14 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
                     active && 'bg-gray-100 text-black'
                 )}
             >
-                <Icon className="h-6 w-6 shrink-0" />
-                <span className="sr-only">{ label }</span>
+                <div className="relative">
+                    <Icon className="h-6 w-6 shrink-0" />
+                    {notificationCount > 0 && (
+                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                            {notificationCount > 9 ? '9+' : notificationCount}
+                        </span>
+                    )}
+                </div>
             </Link>
         </li>
     );

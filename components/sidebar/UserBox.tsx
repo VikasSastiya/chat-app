@@ -69,13 +69,17 @@ const UserBox: React.FC<UserBoxProps> = ({ data, conversations, selected }) => {
     }, [data.id, router, existingConversation]);
 
     return (
-      <Card className={clsx("w-full", { "bg-blue-100": selected })}>
+        <Card className={clsx(
+            "w-full transition-shadow duration-300 ease-in-out hover:shadow-lg",
+            { "bg-blue-100": selected }
+        )}>
           <CardContent className="p-3">
-              <Button
-                  variant="ghost"
-                  className="relative w-full flex items-center gap-4 p-2 rounded-xl"
-                  onClick={handleClick}
-              >
+            <Button
+                variant="ghost"
+                className="relative w-full flex items-center gap-4 p-2 rounded-xl hover:bg-transparent focus:bg-transparent active:bg-transparent"
+                onClick={handleClick}
+            >
+
                   <div className="relative shrink-0">
                       <Avatar className="h-12 w-12 ring-2 ring-offset-2 ring-gray-100 dark:ring-gray-800">
                           <AvatarImage 

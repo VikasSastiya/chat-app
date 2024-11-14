@@ -1,13 +1,13 @@
 "use client"
 import React, {useMemo, useState} from 'react';
 import {Conversation, User} from "@prisma/client";
-import useOtherUser from "@/hooks/useOtherUser";
+import useOtherUser from "@/hooks/users/useOtherUser";
 import Link from "next/link";
 import {HiChevronLeft, HiEllipsisHorizontal} from "react-icons/hi2";
 import Avatar from "@/components/sidebar/Avatar";
 import ProfileDrawer from "@/components/conversations/ProfileDrawer";
 // import AvatarGroup from "@/app/components/AvatarGroup";
-import useActiveList from "@/hooks/useActiveList";
+import useActiveList from "@/hooks/utils/useActiveList";
 
 interface HeaderProps {
     conversation: Conversation & {
@@ -45,6 +45,9 @@ const Header: React.FC<HeaderProps> = ({conversation}) => {
                         <HiChevronLeft size={32}/>
                     </Link>
                     <Avatar user={{
+                        id: otherUser.id,
+                        createdAt: otherUser.createdAt,
+                        updatedAt: otherUser.updatedAt,
                         name: otherUser.name || null,
                         email: otherUser.email || null,
                         image: otherUser.image || null

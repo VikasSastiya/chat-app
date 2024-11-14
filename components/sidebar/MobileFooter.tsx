@@ -1,8 +1,8 @@
 'use client';
 
-import useConversation from "@/hooks/useConversation";
-import useRoutes from "@/hooks/useRoutes";
-import useCurrentUser from "@/hooks/useCurrentUser";
+import useConversation from "@/hooks/conversations/useCurrentConversation";
+import useRoutes from "@/hooks/routes/useRoutes";
+import useCurrentUser from "@/hooks/utils/useCurrentUser";
 import MobileItem from "./MobileItem";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 

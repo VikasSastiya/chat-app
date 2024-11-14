@@ -8,16 +8,16 @@ datasource db {
 }
 
 model User {
-  id                    String          @id @default(cuid())
-  name                  String?
-  email                 String?         @unique
-  emailVerified         DateTime?       @map("email_verified")
-  image                 String?
-  password              String?
-  accounts              Account[]
-  sessions              Session[]
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  password      String?
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   // to send or receive requests
   friendRequestsSent     FriendRequest[] @relation("RequestsSent")
@@ -26,9 +26,9 @@ model User {
   friendships2           Friendship[]    @relation("User2")
 
   // one on one or group chat 
-  conversations    Conversation[] @relation("UserConversations")
-  messages        Message[]      @relation("UserMessages")
-  seenMessages    Message[]      @relation("MessageSeen")
+  conversations Conversation[] @relation("UserConversations")
+  messages      Message[]      @relation("UserMessages")
+  seenMessages  Message[]      @relation("MessageSeen")
 }
 
 model Account {
@@ -56,7 +56,7 @@ model Session {
   userId       String
   expires      DateTime
 
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
@@ -78,9 +78,10 @@ model PasswordResetToken {
 }
 
 model FriendRequest {
-  id         String @id @default(uuid())
+  id         String   @id @default(uuid())
   senderId   String
   receiverId String
+  status     RequestStatus @default(PENDING)
 
   sender   User @relation("RequestsSent", fields: [senderId], references: [id])
   receiver User @relation("RequestsReceived", fields: [receiverId], references: [id])
@@ -88,35 +89,41 @@ model FriendRequest {
   createdAt DateTime @default(now())
 }
 
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
 model Friendship {
   id      String @id @default(uuid())
   userId1 String
   userId2 String
 
-  user1   User @relation("User1", fields: [userId1], references: [id], onDelete: Cascade)
-  user2   User @relation("User2", fields: [userId2], references: [id], onDelete: Cascade)
+  user1 User @relation("User1", fields: [userId1], references: [id], onDelete: Cascade)
+  user2 User @relation("User2", fields: [userId2], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 }
 
 model Conversation {
-  id            String      @id @default(uuid())
-  createdAt     DateTime    @default(now())
-  lastMessageAt DateTime    @default(now())
+  id            String    @id @default(uuid())
+  createdAt     DateTime  @default(now())
+  lastMessageAt DateTime  @default(now())
   name          String?
-  isGroup       Boolean?    @default(false)
+  isGroup       Boolean?  @default(false)
   messages      Message[]
-  users         User[]      @relation("UserConversations")
+  users         User[]    @relation("UserConversations")
 }
 
 model Message {
-  id            String       @id @default(uuid())
-  body          String?
-  image         String?
-  createdAt     DateTime     @default(now())
-  seenBy        User[]       @relation("MessageSeen")
-  conversation  Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  id             String       @id @default(uuid())
+  body           String?
+  image          String?
+  createdAt      DateTime     @default(now())
+  seenBy         User[]       @relation("MessageSeen")
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   conversationId String
-  sender        User         @relation("UserMessages", fields: [senderId], references: [id], onDelete: Cascade)
-  senderId      String
+  sender         User         @relation("UserMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  senderId       String
 }
