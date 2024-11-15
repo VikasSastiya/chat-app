@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, XCircle } from 'lucide-react';
@@ -176,10 +176,9 @@ export const FriendRequests = ({ userId }: FriendRequestsProps) => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Friend Requests</CardTitle>
-        <CardDescription>
+        <CardTitle>
           People who want to connect with you
-        </CardDescription>
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {requests.map((request) => (

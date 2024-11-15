@@ -1,141 +1,148 @@
-"use client"
+'use client'
 
-import React, {useState} from 'react';
-import {User} from "@prisma/client";
-import {useRouter} from "next/navigation";
-import {FieldValues, SubmitHandler, useForm} from "react-hook-form";
-import axios from "axios";
-import toast from "react-hot-toast";
-import Modal from "@/components/Modal";
-import Input from '@/components/sidebar/Input';
-import Image from "next/image";
-import {CldUploadButton} from "next-cloudinary";
-import { Button } from '@/components/ui/button';
+import React, { useState } from 'react'
+import { User } from "@prisma/client"
+import { useRouter } from "next/navigation"
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
+import axios from "axios"
+import { toast } from "react-hot-toast"
+// import Image from "next/image"
+import { CldUploadButton } from "next-cloudinary"
+
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 type SafeUser = Omit<User, "name" | "email" | "image"> & {
-    name: string | null;
-    email: string | null;
-    image: string | null;
+  name: string | null
+  email: string | null
+  image: string | null
 }
 
 interface SettingsModalProps {
-    isOpen?: boolean;
-    onClose: () => void;
-    currentUser: SafeUser | null;
+  isOpen?: boolean
+  onClose: () => void
+  currentUser: SafeUser | null
 }
 
 interface CloudinaryUploadResult {
-    info: {
-        secure_url: string;
-    };
+  info: {
+    secure_url: string
+  }
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ( { isOpen, onClose, currentUser } ) => {
-    const router = useRouter();
-    const [isLoading, setIsLoading] = useState(false);
+export default function SettingsModal({ isOpen, onClose, currentUser }: SettingsModalProps) {
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
 
-    const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<FieldValues>({
-        defaultValues: {
-            name: currentUser?.name || '',
-            image: currentUser?.image || '',
-        }
-    });
-
-    const image = watch('image');
-
-    const handleUpload = (result: CloudinaryUploadResult) => {
-        setValue('image', result?.info?.secure_url, {
-            shouldValidate: true
-        });
+  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<FieldValues>({
+    defaultValues: {
+      name: currentUser?.name || '',
+      image: currentUser?.image || '',
     }
+  })
 
-    const onSubmit: SubmitHandler<FieldValues> = (data) => {
-        setIsLoading(true);
-    
-        axios.post('/api/settings/', data)
-            .then(() => {
-                router.refresh();
-                window.location.reload();
-                onClose();
-            })
-            .catch(() => toast.error("Something went wrong"))
-            .finally(() => setIsLoading(false));
-    }    
+  const image = watch('image')
 
-    return (
-        <Modal isOpen={isOpen} onClose={onClose}>
-            <form onSubmit={handleSubmit(onSubmit)} >
-                <div className="space-y-12">
-                    <div className="border-b border-gray-900/10 pb-12">
-                        <h2 className={"mt-2 text-base font-semibold leading-7 text-gray-900"}>
-                            Profile
-                        </h2>
-                        <p className={"mt-1 text-sm leading-6 text-gray-600"}>
-                            Edit your public information.
-                        </p>
-                        <div className="mt-10 flex flex-col gap-y-8">
-                            <Input 
-                              disabled={isLoading} 
-                              label={"Name"} 
-                              id={"name"} 
-                              errors={errors} 
-                              required 
-                              register={register} 
-                            />
-                            <div>
-                                <label className={"block text-sm font-medium leading-6 text-gray-900"}>
-                                    Photo
-                                </label>
-                                <div className="mt-2 flex items-center gap-x-3">
-                                    <Image 
-                                        className={"rounded-full"} 
-                                        width={"48"} 
-                                        height={"48"} 
-                                        src={image || currentUser?.image || "/profile-pic.jpg"}
-                                        alt={"Avatar"} 
-                                        onError={(e) => {
-                                            const target = e.target as HTMLImageElement;
-                                            target.src = "/profile-pic.jpg";
-                                        }}
-                                    />
-                                    <CldUploadButton 
-                                        options={{ maxFiles: 1 }} 
-                                        onSuccess={(result) => {
-                                            handleUpload(result as CloudinaryUploadResult);
-                                        }}
-                                        uploadPreset={"ymwmaq0t"}
-                                    >
-                                        <Button 
-                                            disabled={isLoading} 
-                                            secondary 
-                                            type={"button"}
-                                        >
-                                            Change
-                                        </Button>
-                                    </CldUploadButton>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="mt-6 flex items-center justify-end gap-x-6">
-                        <Button 
-                          disabled={isLoading} 
-                          secondary 
-                          onClick={onClose}
-                        >
-                            Cancel
-                        </Button>
-                        <Button 
-                          disabled={isLoading} 
-                          type={"submit"}
-                        >
-                            Save
-                        </Button>
-                    </div>
-                </div>
-            </form>
-        </Modal>
-    );
-};
+  const handleUpload = (result: CloudinaryUploadResult) => {
+    setValue('image', result?.info?.secure_url, {
+      shouldValidate: true
+    })
+  }
 
-export default SettingsModal;
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    setIsLoading(true)
+  
+    axios.post('/api/settings/', data)
+      .then(() => {
+        router.refresh()
+        window.location.reload()
+        onClose()
+      })
+      .catch(() => toast.error("Something went wrong"))
+      .finally(() => setIsLoading(false))
+  }
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[425px] bg-white text-gray-800 border border-gray-200 shadow-lg">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-semibold text-gray-900">Edit Profile</DialogTitle>
+          <DialogDescription className="text-gray-600">
+            Make changes to your profile here. Click save when you’re done.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid gap-6 py-4">
+            <div className="flex flex-col items-center space-y-4">
+                <Avatar className="w-24 h-24">
+                    <AvatarImage
+                        src={image || currentUser?.image || "/placeholder.svg?height=96&width=96"}
+                        alt="Profile"
+                        width={96}
+                        height={96}
+                    />
+                    <AvatarFallback>{currentUser?.name?.[0]?.toUpperCase() || 'U'}</AvatarFallback>
+                </Avatar>
+              <CldUploadButton 
+                options={{ maxFiles: 1 }} 
+                onSuccess={(result) => handleUpload(result as CloudinaryUploadResult)}
+                uploadPreset="ymwmaq0t"
+              >
+                <Button 
+                  variant="outline" 
+                  type="button" 
+                  disabled={isLoading}
+                  className="bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-200"
+                >
+                  Change Avatar
+                </Button>
+              </CldUploadButton>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="name" className="text-gray-700">Username</Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder='Change your username to...'
+                disabled={isLoading}
+                className="bg-white border-gray-300 text-gray-900 focus:ring-gray-400 focus:border-gray-400"
+                {...register("name", { required: "Name is required" })}
+              />
+              {errors.name && (
+                <p className="text-sm text-red-600">{errors.name.message as string}</p>
+              )}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={onClose} 
+              disabled={isLoading}
+              className="bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-200"
+            >
+              Cancel
+            </Button>
+            <Button 
+              type="submit" 
+              disabled={isLoading}
+              className="bg-gray-800 text-white hover:bg-gray-900 transition-colors duration-200"
+            >
+              Save changes
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}

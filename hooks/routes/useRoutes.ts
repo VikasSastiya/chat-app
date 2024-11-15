@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
-import { HiChat, HiUserAdd, HiUserGroup } from "react-icons/hi";
-import { HiArrowLeftOnRectangle } from "react-icons/hi2";
+import { HiChat, HiUserAdd } from "react-icons/hi";
+import { HiArrowLeftOnRectangle, HiUsers } from "react-icons/hi2";
 import { signOut } from "next-auth/react";
 import useConversation from "@/hooks/conversations/useCurrentConversation";
 import axios from "axios";
@@ -22,7 +22,7 @@ const useRoutes = () => {
         };
         
         fetchRequestCount();
-        const interval = setInterval(fetchRequestCount, 10000); // Poll every 10 seconds
+        const interval = setInterval(fetchRequestCount, 60000); // Poll every minute
         return () => clearInterval(interval);
     }, []);
 
@@ -42,7 +42,7 @@ const useRoutes = () => {
         {
             label: 'Friend Requests',
             href: '/conversations/requests',
-            icon: HiUserGroup,
+            icon: HiUsers,
             active: pathname === '/conversations/requests',
             notificationCount: requestCount
         },
