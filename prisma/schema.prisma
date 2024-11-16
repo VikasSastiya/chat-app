@@ -78,7 +78,7 @@ model PasswordResetToken {
 }
 
 model FriendRequest {
-  id         String   @id @default(uuid())
+  id         String        @id @default(uuid())
   senderId   String
   receiverId String
   status     RequestStatus @default(PENDING)
@@ -114,6 +114,7 @@ model Conversation {
   isGroup       Boolean?  @default(false)
   messages      Message[]
   users         User[]    @relation("UserConversations")
+  adminId       String?
 }
 
 model Message {

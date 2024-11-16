@@ -1,45 +1,16 @@
 "use client"
 
 import React from 'react';
-import Image from "next/image";
+import { FaUsers } from 'react-icons/fa';
 
-interface AvatarGroupProps {
-    users: {
-        name?: string | null;
-        id: string;
-        createdAt: Date;
-        email?: string | null;
-        emailVerified?: Date | null;
-        image?: string | null;
-        password?: string | null;
-        updatedAt: Date;
-    }[];
-}
-
-const AvatarGroup: React.FC<AvatarGroupProps> = ({ users = [] }) => {
-    console.log('group users: ', users);
-    const slicedUsers = users.slice(0, 3);
-
-    const positionMap = {
-        0: "top-0 left-[12px]",
-        1: "bottom-0",
-        2: "bottom-0 right-0"
-    };
-
+const AvatarGroup = () => {
     return (
-        <div className="relative h-11 w-11">
-            {slicedUsers.map((user, index) => (
-                <div 
-                    key={user.id} 
-                    className={`absolute inline-block rounded-full overflow-hidden h-[21px] w-[21px] ${positionMap[index as keyof typeof positionMap]}`}
-                >
-                    <Image 
-                        fill 
-                        src={user.image || '/images/profile-pic.jpg'} 
-                        alt="Avatar" 
-                    />
+        <div className="relative h-12 w-12 rounded-full overflow-hidden">
+            <div className="flex items-center justify-center h-full w-full bg-gray-300 rounded-full">
+                <div className="flex items-center justify-center h-10 w-10">
+                    <FaUsers className="text-white text-2xl" />
                 </div>
-            ))}
+            </div>
         </div>
     );
 };

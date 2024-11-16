@@ -86,7 +86,7 @@ const UserBox: React.FC<UserBoxProps> = ({ data, conversations, selected }) => {
           <div className="relative shrink-0">
             {data.isGroup ? (
               <div className="h-12 w-12 flex items-center justify-center">
-                <AvatarGroup users={conversation?.users || []} />
+                <AvatarGroup />
               </div>
             ) : (
               <Avatar className="h-12 w-12 ring-2 ring-offset-2 ring-gray-100 dark:ring-gray-800">

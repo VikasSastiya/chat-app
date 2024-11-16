@@ -1,86 +1,115 @@
-"use client";
-import React, { useState } from 'react';
-import { User } from "@prisma/client";
-import { useRouter } from "next/navigation";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import axios from "axios";
-import toast from "react-hot-toast";
-import Modal from "@/components/Modal";
-import Input from "@/components/Inputs/Input";
-import Select from '@/components/Inputs/Select';
-import { Button } from '../ui/button';
+'use client'
+
+import React, { useState } from 'react'
+import { User } from "@prisma/client"
+import { useRouter } from "next/navigation"
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form"
+import axios from "axios"
+import toast from "react-hot-toast"
+import Modal from "@/components/Modal"
+import Input from "@/components/Inputs/Input"
+import Select from '@/components/Inputs/Select'
+import { Button } from '@/components/ui/button'
+// import { ScrollArea } from "@/components/ui/scroll-area"
+import { Users } from 'lucide-react'
 
 interface GroupChatModalProps {
-  isOpen?: boolean;
-  onClose: () => void;
-  users: User[];
+  isOpen?: boolean
+  onClose: () => void
+  users: User[]
 }
 
 const GroupChatModal: React.FC<GroupChatModalProps> = ({ isOpen, users, onClose }) => {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
 
   const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<FieldValues>({
     defaultValues: {
       name: '',
       members: []
     }
-  });
+  })
 
-  const members = watch("members");
+  const members = watch("members")
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    setIsLoading(true);
+    setIsLoading(true)
 
     axios.post("/api/conversations", {
       ...data,
       isGroup: true
     })
       .then(() => {
-        router.refresh();
-        onClose();
+        toast.success("Group chat created successfully!")
+        router.refresh()
+        onClose()
       })
-      .catch(() => toast.error("Something went wrong!"))
-      .finally(() => setIsLoading(false));
-  };
+      .catch(() => {
+        toast.error("Failed to create group chat!")
+      })
+      .finally(() => setIsLoading(false))
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="space-y-12">
-          <div className="border-b border-gray-900/10 pb-12">
-            <h2 className={"text-base font-semibold leading-7 text-gray-900"}>
-              Create a group chat
-            </h2>
-            <p className={"mt-1 text-sm leading-6 text-gray-600"}>
-              For creating a Group Chat you&apos;ve to select more than 2 members
-            </p>
-            <div className="mt-10 flex flex-col gap-y-8">
-              <Input label={"Group Name"} id={"name"} register={register} errors={errors} disabled={isLoading} required />
-            </div>
-            <Select
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Create a Group Chat</h2>
+          <p className="mt-1 text-sm text-gray-600">
+            Connect with multiple people in a single conversation
+          </p>
+        </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div className="space-y-4">
+            <Input
+              label="Group Name"
+              id="name"
+              register={register}
+              errors={errors}
               disabled={isLoading}
-              label={"Members"}
-              options={users.map((user) => ({
-                value: user.id,
-                label: user.name || "Unnamed User" // Fallback for null name
-              }))}
-              onChange={(value) => setValue("members", value, { shouldValidate: true })}
-              value={members}
+              required
             />
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Members</label>
+              {/* <ScrollArea className="h-[100px] border rounded-md mt-1 p-2"> */}
+                <Select
+                  disabled={isLoading}
+                  label=""
+                  options={users.map((user) => ({
+                    value: user.id,
+                    label: user.name || "Unnamed User"
+                  }))}
+                  onChange={(value) => setValue("members", value, { shouldValidate: true })}
+                  value={members}
+                />
+              {/* </ScrollArea> */}
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Users className="w-4 h-4" />
+              <p>Select more than 2 members to create a group</p>
+            </div>
           </div>
-        </div>
-        <div className="mt-6 flex items-center justify-end gap-x-6">
-          <Button disabled={isLoading} onClick={onClose} type={"button"} secondary>
-            Cancel
-          </Button>
-          <Button disabled={isLoading} onClick={onClose} type={"submit"}>
-            Create
-          </Button>
-        </div>
-      </form>
+          <div className="flex justify-end space-x-4">
+            <Button
+              type="button"
+              onClick={onClose}
+              disabled={isLoading}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={isLoading || members.length < 2}
+              className="px-4 py-2 text-sm font-medium text-white bg-sky-600 rounded-md shadow-sm hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Create Group
+            </Button>
+          </div>
+        </form>
+      </div>
     </Modal>
-  );
-};
+  )
+}
 
-export default GroupChatModal;
+export default GroupChatModal

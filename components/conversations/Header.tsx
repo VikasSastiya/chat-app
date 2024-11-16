@@ -6,7 +6,7 @@ import Link from "next/link";
 import {HiChevronLeft, HiEllipsisHorizontal} from "react-icons/hi2";
 import Avatar from "@/components/sidebar/Avatar";
 import ProfileDrawer from "@/components/conversations/ProfileDrawer";
-// import AvatarGroup from "@/app/components/AvatarGroup";
+import AvatarGroup from "@/components/sidebar/AvatarGroup";
 import useActiveList from "@/hooks/utils/useActiveList";
 
 interface HeaderProps {
@@ -44,14 +44,11 @@ const Header: React.FC<HeaderProps> = ({conversation}) => {
                           className={"lg:hidden block text-sky-500 hover:text-sky-600 transition cursor-pointer"}>
                         <HiChevronLeft size={32}/>
                     </Link>
-                    <Avatar user={{
-                        id: otherUser.id,
-                        createdAt: otherUser.createdAt,
-                        updatedAt: otherUser.updatedAt,
-                        name: otherUser.name || null,
-                        email: otherUser.email || null,
-                        image: otherUser.image || null
-                    }}/>
+                    {conversation.isGroup ? (
+                        <AvatarGroup />
+                    ) : (
+                        <Avatar user={otherUser} />
+                    )}
                     <div className={"flex flex-col"}>
                         <div>
                             {conversation.name || otherUser.name}
