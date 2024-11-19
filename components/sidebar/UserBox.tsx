@@ -50,8 +50,10 @@ const UserBox: React.FC<UserBoxProps> = ({ data, conversations, selected }) => {
   }, [userEmail, lastMessage]);
 
   const lastMessageText = useMemo(() => {
-    if (lastMessage?.image) return "Sent an image";
-    if (lastMessage?.body) return lastMessage.body;
+    if (lastMessage?.image) 
+      return "Sent an image";
+    if (lastMessage?.body) 
+      return lastMessage.body.length > 25 ? `${lastMessage.body.substring(0, 25)}...` : lastMessage.body;
     return "Start a conversation";
   }, [lastMessage]);
 
@@ -116,7 +118,7 @@ const UserBox: React.FC<UserBoxProps> = ({ data, conversations, selected }) => {
                 </p>
               </div>
               {lastMessage?.createdAt && (
-                <p className="absolute top-2 right-2 text-xs text-gray-500">
+                <p className="absolute -top-0.5 right-2 text-xs text-gray-500">
                   {format(new Date(lastMessage.createdAt), 'p')}
                 </p>
               )}

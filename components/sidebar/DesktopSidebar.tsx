@@ -22,7 +22,12 @@ const DesktopSidebar = () => {
                         <div className="mb-4 relative cursor-pointer" onClick={() => setIsOpen(true)}>
                             <Avatar className="h-12 w-12">
                                 {user?.image ? (
-                                    <AvatarImage src={user.image} alt={user.name || ''} />
+                                    <AvatarImage 
+                                        src={user.image} 
+                                        alt={user.name || ''} 
+                                        style={{ aspectRatio: "1/1" }} 
+                                        className="object-cover" 
+                                    />
                                 ) : (
                                     <AvatarFallback>
                                         <div className="relative h-full w-full">
