@@ -137,148 +137,183 @@ export default function FriendSearch() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
-      <Card className="max-w-4xl mx-auto overflow-hidden shadow-xl">
-        <CardContent className="p-0">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white">
-            <h2 className="text-3xl font-bold mb-2 flex items-center">
-              <Users className="w-8 h-8 mr-3" />
-              Find New Friends
-            </h2>
-            <p className="text-sm opacity-90 flex items-center">
-              <Sparkles className="w-4 h-4 mr-2" />
-              Discover and connect with people around you
-            </p>
-          </div>
-          <div className="p-8">
-            <form onSubmit={handleSearch} className="relative mb-8">
-              <div className="relative">
-                <Input
-                  type="text"
-                  placeholder="Search by email or username..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pr-12 pl-12 py-6 bg-white/80 backdrop-blur-sm border-2 border-blue-200 focus:border-blue-400 transition-all duration-300 text-lg rounded-full shadow-inner"
-                />
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-400 w-5 h-5" />
-              </div>
-              <Button 
-                type="submit" 
-                disabled={loading} 
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6 py-2 transition-all duration-300"
-              >
-                {loading ? 'Searching...' : 'Search'}
-              </Button>
-            </form>
+    <div className="h-full w-full px-4 md:px-8 pt-8 md:pt-12 lg:pt-16">
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-[95%] md:max-w-5xl mx-auto"
+      >
+        {/* Header Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 md:mb-8 bg-gradient-to-r from-purple-600 to-indigo-600 p-4 md:p-0 md:bg-none rounded-xl md:rounded-none text-white md:text-inherit"
+        >
+          <h2 className="text-lg md:text-3xl font-bold flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+            <Users className="w-5 h-5 md:w-8 md:h-8 text-white md:text-purple-600" />
+            Find New Friends
+          </h2>
+          <p className="text-xs md:text-base opacity-90 md:opacity-100 flex items-center md:text-gray-600">
+            <Sparkles className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
+            Discover and connect with people around you
+          </p>
+        </motion.div>
 
-            {error && (
+        {/* Search Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mb-6 md:mb-8"
+        >
+          <form onSubmit={handleSearch} className="relative">
+            <motion.div 
+              className="relative"
+              whileHover={{ scale: 1.01 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Input
+                type="text"
+                placeholder="Search by email or username..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pr-16 pl-9 md:pl-12 py-2 md:py-6 text-sm md:text-lg rounded-full border-2 border-purple-100 focus:border-purple-300 transition-all duration-300"
+              />
               <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="mb-6"
+                initial={{ opacity: 0.5 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, repeat: Infinity, repeatType: "reverse" }}
               >
-                <Alert variant="destructive" className="bg-red-50 border-l-4 border-red-500 rounded-r-lg shadow-md">
-                  <div className="flex items-center">
-                    <AlertCircle className="w-5 h-5 mr-2 text-red-500" />
-                    <AlertDescription className="text-red-700 font-medium">{error}</AlertDescription>
-                  </div>
-                </Alert>
+                <Search className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-purple-400 w-4 h-4 md:w-6 md:h-6" />
               </motion.div>
-            )}
-
-            {successMessage && (
-              <Alert variant="default" className="mb-4 bg-green-100 border-green-400 text-green-700">
-                <Sparkles className="w-4 h-4 mr-2" />
-                <AlertDescription>{successMessage}</AlertDescription>
-              </Alert>
-            )}
-
-            <AnimatePresence>
-              {searchResults.length > 0 ? (
-                <motion.div 
-                  className="space-y-4"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
+            </motion.div>
+            <Button 
+              type="submit" 
+              disabled={loading} 
+              className="absolute right-1 md:right-2 top-1/2 transform -translate-y-1/2 bg-purple-600 hover:bg-purple-700 text-white rounded-full h-8 md:h-auto px-3 md:px-6 py-0 md:py-2 text-sm md:text-base"
+            >
+              {loading ? (
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                 >
-                  {searchResults.map((user: User) => {
-                    const status = getUserStatus(user.id)
-                    
-                    return (
-                      <motion.div
-                        key={user.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                          <CardContent className="p-6 flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                              {user.image ? (
-                                <Image
-                                  src={user.image}
-                                  alt={user.name || 'User'}
-                                  width={64}
-                                  height={64}
-                                  className="rounded-full border-2 border-blue-400 object-cover"
-                                  style={{ width: '64px', height: '64px' }}
-                                />
-                              ) : (
-                                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-indigo-400 flex items-center justify-center text-white text-2xl font-bold">
-                                      {user.name?.[0]?.toUpperCase() || <User className="w-8 h-8" />}
-                                  </div>
-                              )}
-                              <div>
-                                <p className="font-semibold text-lg text-gray-800">{user.name}</p>
-                                {user.email && (
-                                  <p className="text-sm text-gray-600 flex items-center">
-                                    <User className="w-4 h-4 mr-1" />
-                                    {user.email}
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-
-                            <Button
-                              variant={status !== 'none' ? "secondary" : "default"}
-                              disabled={status !== 'none'}
-                              onClick={() => status === 'none' && handleSendRequest(user.id)}
-                              className={`${
-                                status === 'none' 
-                                  ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                                  : 'bg-gray-300 text-gray-600 cursor-not-allowed'
-                              } px-4 py-2 rounded-full transition-all duration-300`}
-                            >
-                              {status === 'sent' ? (
-                                <>
-                                  <Clock className="w-4 h-4 mr-2" />
-                                  Request Pending
-                                </>
-                              ) : status === 'received' ? (
-                                <>
-                                  <UserPlus className="w-4 h-4 mr-2" />
-                                  Accept Request
-                                </>
-                              ) : (
-                                <>
-                                  <UserPlus className="w-4 h-4 mr-2" />
-                                  Add Friend
-                                </>
-                              )}
-                            </Button>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
-                    )
-                  })}
+                  <span className="block w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
                 </motion.div>
-              ) : null}
-            </AnimatePresence>
-          </div>
-        </CardContent>
-      </Card>
+              ) : 'Search'}
+            </Button>
+          </form>
+        </motion.div>
+
+        {/* Alerts Section */}
+        <AnimatePresence>
+          {(error || successMessage) && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="max-w-2xl mx-auto mb-6 md:mb-8"
+            >
+              {error && (
+                <Alert variant="destructive" className="bg-red-50 border-l-4 border-red-500 rounded-lg shadow-md">
+                  <AlertCircle className="w-4 h-4 md:w-5 md:h-5 mr-2 text-red-500" />
+                  <AlertDescription className="text-sm md:text-base text-red-700 font-medium">{error}</AlertDescription>
+                </Alert>
+              )}
+
+              {successMessage && (
+                <Alert variant="default" className="bg-green-100 border-green-400 text-green-700">
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  <AlertDescription className="text-sm md:text-base">{successMessage}</AlertDescription>
+                </Alert>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Results Section */}
+        <AnimatePresence mode="wait">
+          {searchResults.length > 0 && (
+            <motion.div 
+              className="space-y-3 md:space-y-4 max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+            >
+              {searchResults.map((user: User, index) => {
+                const status = getUserStatus(user.id)
+                
+                return (
+                  <motion.div
+                    key={user.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                    whileHover={{ scale: 1.01 }}
+                    className="transform-gpu"
+                  >
+                    <Card className="overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+                      <CardContent className="p-3 md:p-6 flex items-center justify-between">
+                        <div className="flex items-center gap-2 md:gap-4">
+                          {user.image ? (
+                            <Image
+                              src={user.image}
+                              alt={user.name || 'User'}
+                              width={40}
+                              height={40}
+                              className="w-10 h-10 md:w-14 md:h-14 rounded-full border-2 border-purple-400 object-cover"
+                            />
+                          ) : (
+                            <div className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-gradient-to-br from-purple-400 to-indigo-400 flex items-center justify-center text-white text-sm md:text-xl font-bold">
+                              {user.name?.[0]?.toUpperCase() || <User className="w-5 h-5 md:w-7 md:h-7" />}
+                            </div>
+                          )}
+                          <div>
+                            <p className="font-semibold text-sm md:text-lg text-gray-800">{user.name}</p>
+                            {user.email && (
+                              <p className="text-xs md:text-sm text-gray-600">
+                                {user.email}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        <Button
+                          variant={status !== 'none' ? "secondary" : "default"}
+                          disabled={status !== 'none'}
+                          onClick={() => status === 'none' && handleSendRequest(user.id)}
+                          className={`${
+                            status === 'none' 
+                              ? 'bg-purple-600 hover:bg-purple-700 text-white' 
+                              : 'bg-gray-300 text-gray-600'
+                          } h-8 md:h-10 px-3 md:px-6 rounded-full text-xs md:text-sm`}
+                        >
+                          {status === 'sent' ? (
+                            <>
+                              <Clock className="w-4 h-4 md:mr-2" />
+                              <span className="hidden md:inline">Request Sent</span>
+                            </>
+                          ) : status === 'received' ? (
+                            <>
+                              <UserPlus className="w-4 h-4 md:mr-2" />
+                              <span className="hidden md:inline">Accept Request</span>
+                            </>
+                          ) : (
+                            <>
+                              <UserPlus className="w-4 h-4 md:mr-2" />
+                              <span className="hidden md:inline">Add Friend</span>
+                            </>
+                          )}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </div>
-  )
+  );
 }

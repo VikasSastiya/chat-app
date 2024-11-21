@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, XCircle } from 'lucide-react';
+import { CheckCircle, XCircle, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from '@/hooks/utils/use-toast';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface User {
   id: string;
@@ -147,78 +148,115 @@ export const FriendRequests = ({ userId }: FriendRequestsProps) => {
       .toUpperCase();
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[200px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="text-red-500 text-center p-4">
-        {error}
-      </div>
-    );
-  }
-
-  if (requests.length === 0) {
-    return (
-      <Card>
-        <CardContent className="flex items-center justify-center min-h-[200px]">
-          <p className="text-gray-500">No pending friend requests</p>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>
-          People who want to connect with you
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {requests.map((request) => (
-          <div 
-            key={request.id} 
-            className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
-          >
-            <div className="flex items-center space-x-4">
-              <Avatar>
-                <AvatarImage src={request.sender.image || undefined} />
-                <AvatarFallback>{getInitials(request.sender.name)}</AvatarFallback>
-              </Avatar>
-              <div>
-                <p className="font-medium">{request.sender.name}</p>
-                <p className="text-sm text-gray-500">{request.sender.email}</p>
-              </div>
-            </div>
-            <div className="flex space-x-2">
-              <Button 
-                onClick={() => handleAccept(request.id)}
-                size="sm"
-                className="bg-green-500 hover:bg-green-600 text-white"
-                disabled={processingRequests.has(request.id)}
-              >
-                <CheckCircle className="h-4 w-4 mr-2" />
-                Accept
-              </Button>
-              <Button 
-                variant="destructive"
-                size="sm"
-                onClick={() => handleDecline(request.id)}
-                disabled={processingRequests.has(request.id)}
-              >
-                <XCircle className="h-4 w-4 mr-2" />
-                Decline
-              </Button>
-            </div>
-          </div>
-        ))}
-      </CardContent>
-    </Card>
+    <div className="h-full w-full px-4 md:px-8 pt-8 md:pt-12 lg:pt-16">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-3xl mx-auto"
+      >
+        {/* Header Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 md:mb-8"
+        >
+          <h2 className="text-xl md:text-3xl font-bold flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+            <Users className="h-5 w-5 md:h-8 md:w-8 text-purple-600" />
+            Friend Requests
+          </h2>
+          <p className="text-sm md:text-base text-gray-500 md:text-gray-600">
+            Manage your incoming friend requests
+          </p>
+        </motion.div>
+
+        {/* Content Section */}
+        <AnimatePresence mode="wait">
+          {isLoading ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex justify-center items-center min-h-[200px]"
+            >
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600" />
+            </motion.div>
+          ) : error ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-red-500 text-center p-4"
+            >
+              {error}
+            </motion.div>
+          ) : requests.length === 0 ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-center p-6 md:p-8 text-gray-500 bg-white rounded-xl shadow-sm"
+            >
+              No pending friend requests
+            </motion.div>
+          ) : (
+            <motion.div className="space-y-3 md:space-y-4">
+              {requests.map((request, index) => (
+                <motion.div
+                  key={request.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ delay: index * 0.1 }}
+                  whileHover={{ scale: 1.01 }}
+                  className="transform-gpu" // Performance optimization
+                >
+                  <Card className="overflow-hidden shadow-md hover:shadow-lg transition-all duration-300">
+                    <CardContent className="p-3 md:p-6 flex items-center justify-between">
+                      <div className="flex items-center gap-2 md:gap-4">
+                        <Avatar className="h-10 w-10 md:h-12 md:w-12">
+                          <AvatarImage src={request.sender.image || undefined} />
+                          <AvatarFallback>{getInitials(request.sender.name)}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-medium md:font-semibold text-sm md:text-lg text-gray-800">
+                            {request.sender.name}
+                          </p>
+                          <p className="text-xs md:text-sm text-gray-500">
+                            {request.sender.email}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-1 md:gap-2">
+                        <Button
+                          size="sm"
+                          onClick={() => handleAccept(request.id)}
+                          disabled={processingRequests.has(request.id)}
+                          className="h-8 md:h-10 px-2 md:px-4 bg-green-500 hover:bg-green-600 text-white"
+                        >
+                          <CheckCircle className="h-4 w-4 md:mr-2" />
+                          <span className="hidden md:inline">Accept</span>
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => handleDecline(request.id)}
+                          disabled={processingRequests.has(request.id)}
+                          className="h-8 md:h-10 px-2 md:px-4"
+                        >
+                          <XCircle className="h-4 w-4 md:mr-2" />
+                          <span className="hidden md:inline">Decline</span>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </div>
   );
 };

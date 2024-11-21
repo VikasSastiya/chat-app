@@ -17,12 +17,12 @@ export default async function RequestsPage() {
 
   return (
     <div className="container max-w-4xl mx-auto p-6">
-      <div className="mb-8">
+      {/* <div className="mb-8">
         <h1 className="text-2xl font-bold tracking-tight">Friend Requests</h1>
         <p className="text-muted-foreground">
           Manage your incoming friend requests
         </p>
-      </div>
+      </div> */}
       <FriendRequests userId={session.user.id} />
     </div>
   );
