@@ -2,6 +2,7 @@ import getCurrentUser from "@/hooks/users/getCurrentUser";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { z } from "zod"; // Recommended for validation
+import { pusherServer } from "@/lib/pusher";
 
 // Input validation schema
 const ConversationSchema = z.object({
@@ -64,6 +65,12 @@ export async function POST(request: Request) {
         }
       });
 
+      newGroupConversation.users.forEach((user) => {
+        if (user.email) {
+          pusherServer.trigger(user.email, 'conversation:new', newGroupConversation)
+        }
+      })
+
       return NextResponse.json(newGroupConversation);
     }
 
@@ -108,6 +115,12 @@ export async function POST(request: Request) {
         users: true
       }
     });
+
+    newConversation.users.map((user) => {
+      if(user.email) {
+        pusherServer.trigger(user.email, 'conversation:new', newConversation)
+      }  
+    })
 
     return NextResponse.json(newConversation);
 

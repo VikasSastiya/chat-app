@@ -1,6 +1,7 @@
 import {NextResponse} from "next/server";
 import getCurrentUser from "@/hooks/users/getCurrentUser";
 import { db } from "@/lib/db";
+import { pusherServer } from "@/lib/pusher";
 
 interface IParams {
     conversationId?: string
@@ -37,9 +38,11 @@ export async function POST(request: Request, { params }: { params: IParams } ) {
         // Find last message
         const lastMessage = conversation.messages[conversation.messages.length - 1];
 
-        if (!lastMessage) {
-            return NextResponse.json(conversation);
-        }
+        // Ensure lastMessage includes seenIds
+        const lastMessageWithSeenIds = {
+            ...lastMessage,
+            seenIds: lastMessage.seenBy.map(user => user.id) // Extract seenIds from seenBy
+        };
 
         // Update seen of last message
         const updatedMessage = await db.message.update({
@@ -59,9 +62,16 @@ export async function POST(request: Request, { params }: { params: IParams } ) {
             }
         });
 
-        // if (lastMessage.seenIds.indexOf(currentUser.id) !== -1) {
-        //     return NextResponse.json(conversation);
-        // }
+        await pusherServer.trigger(currentUser.email, 'conversation:update', {
+            id: conversationId,
+            messages: [updatedMessage]
+        });
+
+        if (lastMessageWithSeenIds.seenIds.indexOf(currentUser.id) !== -1) {
+            return NextResponse.json(conversation);
+        }
+
+        await pusherServer.trigger(conversationId!, 'message:update', updatedMessage);
 
         return NextResponse.json(updatedMessage);
     } catch (error: unknown) {

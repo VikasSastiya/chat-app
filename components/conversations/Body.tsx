@@ -6,13 +6,15 @@ import useConversation from "@/hooks/conversations/useCurrentConversation";
 import MessageBox from "@/components/conversations/MessageBox";
 import axios from "axios";
 import { format, isToday, isYesterday } from "date-fns";
+import { pusherClient } from '@/lib/pusher';
+import { find } from 'lodash';
 
 interface BodyProps {
     initialMessages: FullMessageType[]
 }
 
 export default function Component({ initialMessages }: BodyProps) {
-    const [messages] = useState<FullMessageType[]>(initialMessages);
+    const [messages, setMessages] = useState<FullMessageType[]>(initialMessages);
     const scrollRef = useRef<HTMLDivElement>(null);
     const bottomRef = useRef<HTMLDivElement>(null);
     const { conversationId } = useConversation();
@@ -44,6 +46,45 @@ export default function Component({ initialMessages }: BodyProps) {
 
     useEffect(() => {
         axios.post(`/api/conversations/${conversationId}/seen`);
+    }, [conversationId]);
+
+    useEffect(() => {
+        if (!conversationId) return;
+
+        pusherClient.subscribe(conversationId);
+
+        const messageHandler = (message: FullMessageType) => {
+            if (message.conversationId === conversationId) {
+                setMessages((current) => {
+                    if (find(current, { id: message.id })) {
+                        return current;
+                    }
+                    return [...current, message];
+                });
+
+                bottomRef?.current?.scrollIntoView();
+            }
+        };
+
+        const updateMessageHandler = (newMessage: FullMessageType) => {
+            if (newMessage.conversationId === conversationId) {
+                setMessages((current) => current.map((currentMessage) => {
+                    if (currentMessage.id === newMessage.id) {
+                        return newMessage;
+                    }
+                    return currentMessage;
+                }));
+            }
+        };
+
+        pusherClient.bind('messages:new', messageHandler);
+        pusherClient.bind('message:update', updateMessageHandler);
+
+        return () => {
+            pusherClient.unsubscribe(conversationId);
+            pusherClient.unbind('messages:new', messageHandler);
+            pusherClient.unbind('message:update', updateMessageHandler);
+        };
     }, [conversationId]);
 
     const groupedMessages = messages.reduce((acc, message) => {
