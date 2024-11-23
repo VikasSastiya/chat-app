@@ -5,7 +5,7 @@ import { FullConversationType, User } from "@/types";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Avatar from '@/components/sidebar/Avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { format } from 'date-fns';
@@ -82,25 +82,26 @@ const UserBox: React.FC<UserBoxProps> = ({ data, conversations, selected }) => {
       <CardContent className="p-3">
         <Button
           variant="ghost"
-          className="relative w-full flex items-center gap-4 p-2 rounded-xl hover:bg-transparent focus:bg-transparent active:bg-transparent"
+          className="relative w-full flex items-center gap-3 p-2 rounded-xl hover:bg-transparent focus:bg-transparent active:bg-transparent"
           onClick={handleClick}
         >
-          <div className="relative shrink-0">
+          <div className="mt-0.5 flex items-center justify-center">
             {data.isGroup ? (
-              <div className="h-12 w-12 flex items-center justify-center">
+              <div className="h-12 w-12">
                 <AvatarGroup />
               </div>
             ) : (
-              <Avatar className="h-12 w-12 ring-2 ring-offset-2 ring-gray-100 dark:ring-gray-800">
-                <AvatarImage
-                  src={data.image || undefined}
-                  alt={data.name || 'User'}
-                  className="object-cover"
-                />
-                <AvatarFallback className="bg-gradient-to-br from-blue-600 to-purple-600 text-white font-medium">
-                  {data.name?.[0] || 'U'}
-                </AvatarFallback>
-              </Avatar>
+              <Avatar 
+                user={{
+                  id: data.id,
+                  name: data.name,
+                  email: data.email,
+                  image: data.image,
+                  createdAt: data.createdAt,
+                  updatedAt: data.updatedAt
+                }}
+                size="large"
+              />
             )}
           </div>
 

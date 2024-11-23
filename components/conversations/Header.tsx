@@ -1,5 +1,5 @@
 "use client"
-import React, {useMemo, useState} from 'react';
+import React, {useMemo, useState, useEffect} from 'react';
 import {Conversation, User} from "@prisma/client";
 import useOtherUser from "@/hooks/users/useOtherUser";
 import Link from "next/link";
@@ -18,16 +18,24 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({conversation}) => {
     const otherUser = useOtherUser(conversation);
     const [drawOpen, setDrawOpen] = useState(false);
+    const [isActive, setIsActive] = useState(false);
 
     const { members } = useActiveList();
-    const isActive = members.indexOf(otherUser?.email ?? '') !== -1;
+
+    useEffect(() => {
+        if (otherUser?.email) {
+            console.log('Current members:', members);
+            console.log('Other user email:', otherUser.email);
+            setIsActive(members.includes(otherUser.email));
+        }
+    }, [members, otherUser?.email]);
 
     const statusText = useMemo(() => {
         if (conversation.isGroup) {
-            return `${conversation.users.length} members`
+            return `${conversation.users.length} members`;
         }
 
-        return isActive ? 'Active' : "Offline";
+        return isActive ? 'Online' : 'Offline';
     }, [conversation.isGroup, conversation.users.length, isActive]);
 
     return (
@@ -55,12 +63,20 @@ const Header: React.FC<HeaderProps> = ({conversation}) => {
                         <div>
                             {conversation.name || otherUser.name}
                         </div>
-                        <div className={"text-sm font-light text-neutral-500"}>
+                        <div 
+                            className={`text-sm font-light ${
+                                isActive
+                            }`}
+                        >
                             {statusText}
                         </div>
                     </div>
                 </div>
-                <HiEllipsisHorizontal size={32} onClick={() => setDrawOpen(true)} className={"text-purple-500 cursor-pointer hover:text-purple-600 transition"}/>
+                <HiEllipsisHorizontal 
+                    size={32} 
+                    onClick={() => setDrawOpen(true)} 
+                    className={"text-purple-500 cursor-pointer hover:text-purple-600 transition"}
+                />
             </div>
         </>
     );

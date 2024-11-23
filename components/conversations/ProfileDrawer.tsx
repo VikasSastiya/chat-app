@@ -22,7 +22,7 @@ interface ProfileDrawerProps {
 const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, data }) => {
     const otherUser = useOtherUser(data);
     const { members } = useActiveList();
-    const isActive = otherUser?.email ? members.includes(otherUser.email) : false;
+    const isActive = otherUser?.email ? members.indexOf(otherUser.email) !== -1 : false;
     const user = useCurrentUser();
 
     const [confirmOpen, setConfirmOpen] = useState(false);
@@ -43,7 +43,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, data }) 
         if (data.isGroup) {
             return `${data.users.length} members`;
         }
-        return isActive ? 'Active' : 'Offline';
+        return isActive ? 'Online' : 'Offline';
     }, [data.isGroup, data.users.length, isActive]);
 
     const adminId = data.adminId;
@@ -101,7 +101,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, data }) 
                                                         <Avatar user={otherUser} />
                                                     )}
                                                     <div>{title}</div>
-                                                    <div className="text-sm text-gray-500">{statusText}</div>
+                                                    <div className="text-sm text-gray-500">{ statusText }</div>
                                                     <div className="flex gap-10 my-8">
                                                         {(data.isGroup && isAdmin) || (!data.isGroup) ? (
                                                             <div

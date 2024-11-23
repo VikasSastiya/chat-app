@@ -83,7 +83,7 @@ export const FriendRequests = ({ userId }: FriendRequestsProps) => {
       }
 
       setRequests(prev => prev.filter(req => req.id !== requestId));
-      router.refresh();
+      window.location.reload();
       toast({
         title: "Success",
         description: "Friend request accepted"

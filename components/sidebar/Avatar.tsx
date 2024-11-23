@@ -26,13 +26,13 @@ const Avatar: React.FC<AvatarProps> = ({ user, size = 'medium' }) => {
   const sizeClasses = {
     small: 'w-8 h-8',
     medium: 'w-9 h-9 md:w-11 md:h-11',
-    large: 'w-12 h-12 md:w-14 md:h-14'
+    large: 'w-11 h-11 md:w-12 md:h-12'
   };
 
   const statusSizeClasses = {
     small: 'w-2 h-2',
     medium: 'w-2 h-2 md:w-3 md:h-3',
-    large: 'w-3 h-3 md:w-4 md:h-4'
+    large: 'w-3 h-3 md:w-3.5 md:h-3.5'
   };
 
   const getImageSource = () => {
@@ -49,30 +49,46 @@ const Avatar: React.FC<AvatarProps> = ({ user, size = 'medium' }) => {
           src={getImageSource()}
           alt={user?.name || 'Avatar'}
           fill
-          priority
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover"
+          sizes="(max-width: 768px) 96px, 128px"
+          quality={80}
+          loading="eager"
+          className="object-cover transition-opacity duration-200"
           onError={(e) => {
             const target = e.target as HTMLImageElement;
             target.src = '/images/profile-pic.jpg';
           }}
         />
       </div>
-      {isActive && (
-        <span 
-          className={`
-            absolute 
-            block 
-            rounded-full 
-            bg-green-500 
-            ring-2 
-            ring-white 
-            top-0 
-            right-0 
-            ${statusSizeClasses[size]}
-          `}
-        />
-      )}
+      <span 
+        className={`
+          absolute 
+          block 
+          rounded-full 
+          ${isActive ? 'bg-green-500' : 'bg-red-500'}
+          ring-2 
+          ring-white 
+          top-0 
+          right-0
+          ${statusSizeClasses[size]}
+          ${!isActive && 'flex items-center justify-center'}
+        `}
+      >
+        {!isActive && (
+          <div 
+            className="
+              w-[70%] 
+              h-[3px] 
+              bg-black/90 
+              rounded-full 
+              absolute 
+              top-1/2 
+              left-1/2 
+              -translate-x-1/2 
+              -translate-y-1/2
+            "
+          />
+        )}
+      </span>
     </div>
   );
 };

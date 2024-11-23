@@ -163,26 +163,26 @@ export default function FriendSearch() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
           className="mb-6 md:mb-8"
         >
           <form onSubmit={handleSearch} className="relative">
             <motion.div 
               className="relative"
               whileHover={{ scale: 1.01 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.15 }}
             >
               <Input
                 type="text"
                 placeholder="Search by email or username..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pr-16 pl-9 md:pl-12 py-2 md:py-6 text-sm md:text-lg rounded-full border-2 border-purple-100 focus:border-purple-300 transition-all duration-300"
+                className="w-full pr-16 pl-9 md:pl-12 py-2 md:py-6 text-sm md:text-lg rounded-full border-2 border-purple-100 focus:border-purple-300 transition-all duration-200"
               />
               <motion.div
                 initial={{ opacity: 0.5 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 1, repeat: Infinity, repeatType: "reverse" }}
+                transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
               >
                 <Search className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-purple-400 w-4 h-4 md:w-6 md:h-6" />
               </motion.div>

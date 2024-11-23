@@ -14,6 +14,7 @@ import GroupChatModal from '@/components/sidebar/GroupChatModal';
 import { useSession } from 'next-auth/react';
 import { pusherClient } from '@/lib/pusher';
 import { find } from 'lodash';
+import { useRouter } from 'next/navigation';
 
 interface FriendListProps {
   conversations: FullConversationType[];
@@ -26,10 +27,11 @@ interface GroupType extends FullConversationType {
 export default function FriendList({ conversations: initialConversations }: FriendListProps) {
   const [conversations, setConversations] = useState<FullConversationType[]>(initialConversations);
   const [searchTerm, setSearchTerm] = useState('');
-  const { isOpen } = useConversation();
+  const { isOpen, conversationId } = useConversation();
   const { friends, isLoading } = useFriends();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const session = useSession();
+  const router = useRouter();
   
   const pusherKey = session.data?.user?.email;
 
@@ -83,10 +85,22 @@ export default function FriendList({ conversations: initialConversations }: Frie
       });
     };
 
+    const removeHandler = (conversation: FullConversationType) => {
+      setConversations((current) => {
+        return [...current].filter((currentConversation) => 
+          currentConversation.id !== conversation.id);
+      });
+      
+      if (conversationId === conversation.id) {
+        router.push("/conversations");
+      }
+    };
+
     // Bind events
     pusherClient.bind('messages:new', messageHandler);
     pusherClient.bind('conversation:new', newConversationHandler);
     pusherClient.bind('conversation:update', updateHandler);
+    pusherClient.bind('conversation:remove', removeHandler);
 
     return () => {
       // Cleanup subscriptions
@@ -99,8 +113,9 @@ export default function FriendList({ conversations: initialConversations }: Frie
       pusherClient.unbind('messages:new', messageHandler);
       pusherClient.unbind('conversation:new', newConversationHandler);
       pusherClient.unbind('conversation:update', updateHandler);
+      pusherClient.unbind('conversation:remove', removeHandler);
     };
-  }, [pusherKey, conversations]);
+  }, [pusherKey, conversations, router, conversationId]);
 
   // Update conversations when initialConversations prop changes
   useEffect(() => {
