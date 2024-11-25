@@ -43,8 +43,9 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
                     text-gray-500
                     hover:text-black
                     hover:bg-gray-100
+                    dark:hover:bg-gray-800
                 `,
-                    active && 'bg-gray-100 text-black'
+                    active && 'bg-gray-100 dark:bg-gray-800 text-black dark:text-gray-100'
                 )}
             >
                 <div className="relative">

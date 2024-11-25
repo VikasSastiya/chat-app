@@ -195,7 +195,7 @@ export const FriendRequests = ({ userId }: FriendRequestsProps) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="text-center p-6 md:p-8 text-gray-500 bg-white rounded-xl shadow-sm"
+              className="text-center p-6 md:p-8 text-gray-500 bg-white dark:bg-gray-900 rounded-xl shadow-sm"
             >
               No pending friend requests
             </motion.div>

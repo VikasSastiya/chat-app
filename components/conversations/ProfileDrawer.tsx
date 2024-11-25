@@ -78,14 +78,14 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, data }) 
                                     leaveTo="translate-x-full"
                                 >
                                     <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
-                                        <div className="flex h-full flex-col bg-white overflow-y-scroll py-6 shadow-xl">
+                                        <div className="flex h-full flex-col bg-white dark:bg-gray-900 overflow-y-scroll py-6 shadow-xl">
                                             <div className="px-4 sm:px-6">
                                                 <div className="flex items-start justify-end">
                                                     <div className="ml-3 flex h-7 items-center">
                                                         <button
                                                             onClick={onClose}
                                                             type="button"
-                                                            className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
+                                                            className="rounded-md bg-white dark:bg-gray-900 text-gray-400 dark:text-gray-100 hover:text-gray-500 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
                                                         >
                                                             <span className="sr-only">Close Panel</span>
                                                             <IoClose size={24} />
@@ -106,12 +106,12 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, data }) 
                                                         {(data.isGroup && isAdmin) || (!data.isGroup) ? (
                                                             <div
                                                                 onClick={() => setConfirmOpen(true)}
-                                                                className="flex flex-col gap-3 items-center cursor-pointer hover:opacity-75"
+                                                                className="flex flex-col gap-3 items-center cursor-pointer"
                                                             >
-                                                                <div className="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center">
+                                                                <div className="w-10 h-10 bg-neutral-100 dark:bg-gray-900 rounded-full flex items-center justify-center hover:opacity-75 transition">
                                                                     <IoTrash size={20} />
                                                                 </div>
-                                                                <div className="text-sm font-light text-neutral-600">
+                                                                <div className="text-sm font-light text-neutral-600 dark:text-gray-100">
                                                                     Delete Conversation
                                                                 </div>
                                                             </div>
@@ -122,10 +122,10 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, data }) 
                                                             {data.isGroup && (
                                                                 <>
                                                                     <div className='text-center'>
-                                                                        <dt className="text-sm font-medium text-gray-500 sm:w-full sm:flex-shrink-0">
+                                                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-100 sm:w-full sm:flex-shrink-0">
                                                                             Created At
                                                                         </dt>
-                                                                        <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
+                                                                        <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2">
                                                                             <time dateTime={data.createdAt.toISOString()}>
                                                                                 {createdAtData}
                                                                             </time>
@@ -133,10 +133,10 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, data }) 
                                                                     </div>
                                                                     <hr className="my-2" />
                                                                     <div>
-                                                                        <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
+                                                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-100 sm:w-40 sm:flex-shrink-0">
                                                                             Admin
                                                                         </dt>
-                                                                        <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
+                                                                        <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2">
                                                                             <div className="flex items-center space-x-2">
                                                                                 {data.users
                                                                                     .filter(user => user.id === adminId) // Only show admin
@@ -150,10 +150,10 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, data }) 
                                                                         </dd>
                                                                     </div>
                                                                     <div>
-                                                                        <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
+                                                                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-100 sm:w-40 sm:flex-shrink-0">
                                                                             Members
                                                                         </dt>
-                                                                        <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
+                                                                        <dd className="mt-1 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2">
                                                                             <div className="flex flex-col gap-2">
                                                                                 {data.users
                                                                                     .filter(user => user.id !== adminId) // Exclude admin from members
@@ -173,7 +173,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, data }) 
                                                                     <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
                                                                         Email
                                                                     </dt>
-                                                                    <dd className="mt-2 text-sm text-gray-900 sm:col-span-2">
+                                                                    <dd className="mt-2 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2">
                                                                         {otherUser?.email || 'N/A'}
                                                                     </dd>
                                                                 </div>
@@ -185,7 +185,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, data }) 
                                                                         <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
                                                                             Joined
                                                                         </dt>
-                                                                        <dd className="mt-2 text-sm text-gray-900 sm:col-span-2">
+                                                                        <dd className="mt-2 text-sm text-gray-900 dark:text-gray-100 sm:col-span-2">
                                                                             <time dateTime={joinedData}>
                                                                                 {joinedData}
                                                                             </time>

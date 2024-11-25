@@ -7,6 +7,7 @@ import DesktopItem from "./DesktopItem";
 import Image from "next/image";
 import SettingsModal from "./SettingModal";
 import { useState } from "react";
+import ThemeSwitch from '../ThemeSwitch'
 
 const DesktopSidebar = () => {
     const routes = useRoutes();
@@ -16,7 +17,7 @@ const DesktopSidebar = () => {
     return (
         <>
             <SettingsModal currentUser={user} isOpen={isOpen} onClose={() => setIsOpen(false)}/>
-            <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:w-20 xl:px-6 lg:overflow-y-auto lg:bg-white lg:border-r-[1px] lg:pb-4 lg:flex lg:flex-col justify-between">
+            <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:w-20 xl:px-6 lg:overflow-y-auto lg:bg-white dark:bg-gray-900 lg:border-r-[1px] lg:pb-4 lg:flex lg:flex-col justify-between">
                 <nav className="mt-4 flex flex-col justify-between h-full">
                     <div className="flex flex-col items-center">
                         <div className="mb-4 relative cursor-pointer" onClick={() => setIsOpen(true)}>
@@ -59,6 +60,9 @@ const DesktopSidebar = () => {
                                     notificationCount={item.notificationCount || 0}
                                 />
                             ))}
+                            <li>
+                                <ThemeSwitch />
+                            </li>
                         </ul>
                     </div>
                 </nav>

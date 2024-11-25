@@ -9,7 +9,7 @@ const DashboardPage = async () => {
     return (
         <>
             <Toaster />
-            <div className="hidden lg:block lg:pl-80 h-full">
+            <div className="hidden lg:block lg:pl-80 h-full bg-white dark:bg-gray-900">
                 {/* {JSON.stringify(session)} */}
                 {/* <form action={async () => {
                     "use server";

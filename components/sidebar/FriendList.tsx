@@ -15,6 +15,7 @@ import { useSession } from 'next-auth/react';
 import { pusherClient } from '@/lib/pusher';
 import { find } from 'lodash';
 import { useRouter } from 'next/navigation';
+import ThemeSwitch from '@/components/ThemeSwitch';
 
 interface FriendListProps {
   conversations: FullConversationType[];
@@ -200,7 +201,7 @@ export default function FriendList({ conversations: initialConversations }: Frie
         <div className="px-5">
           {/* Search and Header Section */}
           <div className="sticky top-0 pt-4 pb-2 bg-white dark:bg-gray-900 z-10">
-            <div className="relative flex items-center mb-6">
+            <div className="relative flex items-center mb-4">
               <div className="absolute left-3 flex items-center pointer-events-none">
                 <Search className="text-gray-400 dark:text-gray-500" size={20} />
               </div>
@@ -221,12 +222,29 @@ export default function FriendList({ conversations: initialConversations }: Frie
                   {filteredItems.filteredFriends.length + filteredItems.filteredGroups.length}
                 </span>
               </div>
-              <button
-                onClick={() => setIsModalOpen(true)} 
-                className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition"
-              >
-                <MdOutlineGroupAdd className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-              </button>
+
+              {/* Theme Switch - Mobile Only */}
+              <div className="lg:hidden flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <ThemeSwitch />
+                  <button
+                    onClick={() => setIsModalOpen(true)} 
+                    className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition"
+                  >
+                    <MdOutlineGroupAdd className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Group Button - Desktop Only */}
+              <div className="hidden lg:block">
+                <button
+                  onClick={() => setIsModalOpen(true)} 
+                  className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition"
+                >
+                  <MdOutlineGroupAdd className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                </button>
+              </div>
             </div>
           </div>
 

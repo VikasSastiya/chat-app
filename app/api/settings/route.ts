@@ -6,20 +6,24 @@ export async function POST(request: Request) {
     try {
         const currentUser = await getCurrentUser();
         const body = await request.json();
-        const { name, image } = body;
-
+        
         if (!currentUser?.id) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
-        const updateData: { name?: string; image?: string } = {};
+        // Start with current values as defaults
+        const updateData = {
+            name: currentUser.name,
+            image: currentUser.image
+        };
         
-        if (name !== undefined) {
-            updateData.name = name;
+        // Only override fields that are provided in the request
+        if ('name' in body) {
+            updateData.name = body.name;
         }
         
-        if (image !== undefined && image !== currentUser.image) {
-            updateData.image = image;
+        if ('image' in body) {
+            updateData.image = body.image;
         }
 
         const updatedUser = await db.user.update({

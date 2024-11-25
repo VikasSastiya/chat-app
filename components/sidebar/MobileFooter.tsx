@@ -28,7 +28,7 @@ const MobileFooter = () => {
             />
             {/* Only render the MobileFooter if not in a friend's chat conversation */}
             {!isInFriendChat && (
-                <div className="fixed justify-between w-full bottom-0 z-40 flex items-center bg-white border-t-[1px] lg:hidden">
+                <div className="fixed justify-between w-full bottom-0 z-40 flex items-center bg-white dark:bg-gray-900 border-t-[1px] lg:hidden">
                     {routes.map((item) => (
                         <MobileItem
                             key={item.label}

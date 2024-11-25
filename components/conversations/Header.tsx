@@ -46,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({conversation}) => {
                 onClose={() => setDrawOpen(false)}
             />
             <div
-                className={"bg-white w-full flex border-b-[1px] sm:px-4 py-3 px-4 lg:px-6 justify-between items-center shadow-sm"}>
+                className={"bg-white dark:bg-gray-900 w-full flex border-b-[1px] sm:px-4 py-3 px-4 lg:px-6 justify-between items-center shadow-sm"}>
                 <div className={"flex gap-3 items-center"}>
                     <Link 
                         href={"/conversations"}

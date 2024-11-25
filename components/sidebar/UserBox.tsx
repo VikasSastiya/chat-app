@@ -113,7 +113,7 @@ const UserBox: React.FC<UserBoxProps> = ({ data, conversations, selected }) => {
                 </p>
                 <p className={clsx(
                   "truncate text-sm mt-1",
-                  hasSeen ? "text-gray-500" : "text-gray-900 font-medium"
+                  hasSeen ? "text-gray-500" : "text-gray-900 dark:text-gray-300 font-medium"
                 )}>
                   {lastMessageText}
                 </p>

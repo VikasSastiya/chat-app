@@ -42,7 +42,7 @@ export default function MessageBox({
 
     const message = clsx(
         "text-sm w-fit overflow-hidden relative",
-        isOwn ? "bg-purple-600 text-white" : "bg-gray-100",
+        isOwn ? "bg-purple-600 text-white" : "bg-gray-100 dark:bg-gray-900",
         data.image ? "rounded-lg p-0" : "rounded-lg py-1.5 px-3 pb-5" // More rectangular with slight rounded corners
     );
 
@@ -72,7 +72,7 @@ export default function MessageBox({
                 <div className="w-full my-2 text-center">
                     <div className="relative">
                         <hr className="border-gray-300" />
-                        <span className="absolute left-1/2 transform -translate-x-1/2 bg-white px-2 text-gray-500">
+                        <span className="absolute left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-900 px-2 text-gray-500 dark:text-gray-100">
                             {displayDate}
                         </span>
                     </div>
@@ -109,7 +109,7 @@ export default function MessageBox({
                     </div>
                 </div>
                 {isLast && isOwn && seenList.length > 0 && (
-                    <div className="text-xs font-light text-gray-500 mt-0.5">
+                    <div className="text-xs font-light text-gray-500 dark:text-gray-100 mt-0.5">
                         {`Seen by ${seenList}`}
                     </div>
                 )}
