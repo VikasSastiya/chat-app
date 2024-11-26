@@ -1,34 +1,37 @@
-import { Poppins } from "next/font/google";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { LoginButton } from "@/components/auth/login-button";
-
-const font = Poppins({
-  subsets: ["latin"],
-  weight: ["600"]
-})
-
+import Navbar from "@/components/Home/Navbar.Home";
+import HeroSection from "@/components/Home/HeroSection.Home";
+import AnalyticsSection from "@/components/Home/AnalyticsSection.Home";
+import FeaturesSection from "@/components/Home/FeaturesSection.Home";
+import Footer from "@/components/Home/Footer.Home";
 export default async function Home() {
   return (
-    <main className="flex h-full flex-col items-center justify-center bg-purple-800">
-      <div className="space-y-6 text-center">
-        <h1 className={cn(
-          "text-6xl font-semibold text-white drop-shadow-md",
-          font.className,
-        )}>
-          🗨️chat-app
-        </h1>
-        <p className="text-white text-lg">
-          A simple Authentication System
-        </p>
-        <div>
-          <LoginButton> 
-            <Button variant="secondary" size="lg">
-              sign in
-            </Button>
-          </LoginButton>
+    <>
+      <main
+        style={{
+          background:
+            "linear-gradient(160deg, rgba(255,255,255,1) 0%, rgba(254,205,182,1) 15%, rgba(254,208,186,1) 20%, rgba(255,140,202,1) 37%, rgba(254,203,183,1) 55%, rgba(254,199,180,1) 64%, rgba(255,132,132,0.7259278711484594) 72%, rgba(253,200,187,1) 82%, rgba(253,199,188,1) 82%, rgba(223,82,255,1) 100%)",
+        }}
+        className="text-black"
+      >
+        <div className="h-[140vh] w-full p-4 overflow-hidden ">
+          <Navbar />
+          <HeroSection />
+          <div className="w-full overflow-hidden mt-[8vh] ">
+            <div className="max-w-[70rem] mx-auto bg-[#ffffff47] rounded-2xl border-[2px] border-white ">
+              <img
+                className="object-cover p-5 rounded-2xl "
+                src="./chat-onn.png"
+                alt="chat-onn.png"
+              />
+            </div>
+          </div>
         </div>
-      </div>
-    </main>
+        <div className="min-h-[100vh] w-full p-4 ">
+          <AnalyticsSection />
+          <FeaturesSection />
+        </div>
+        <Footer />
+      </main>
+    </>
   );
 }
