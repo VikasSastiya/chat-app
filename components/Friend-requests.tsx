@@ -219,7 +219,7 @@ export const FriendRequests = ({ userId }: FriendRequestsProps) => {
                           <AvatarFallback>{getInitials(request.sender.name)}</AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-medium md:font-semibold text-sm md:text-lg text-gray-800">
+                          <p className="font-medium md:font-semibold text-sm md:text-lg text-gray-800 dark:text-gray-200">
                             {request.sender.name}
                           </p>
                           <p className="text-xs md:text-sm text-gray-500">

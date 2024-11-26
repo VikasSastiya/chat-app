@@ -2,7 +2,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 export interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: "default" | "card" | "avatar" | "title" | "text" | "button"
+  variant?: "default" | "card" | "avatar" | "title" | "text" | "button" | "conversation-item" | "time"
 }
 
 const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
@@ -11,15 +11,22 @@ const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
       <div
         ref={ref}
         className={cn(
-          "animate-pulse bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100",
-          "bg-[length:400%_100%] animate-[shimmer_1.5s_infinite]",
+          "animate-pulse rounded-md",
+          "relative isolate overflow-hidden",
+          "before:absolute before:inset-0",
+          "before:-translate-x-full",
+          "before:animate-[shimmer_2s_infinite]",
+          "before:bg-gradient-to-r",
+          "before:from-transparent before:via-gray-200/60 dark:before:via-gray-600/60 before:to-transparent",
           {
-            "h-6 w-2/5 rounded-md": variant === "title",
-            "h-4 w-4/5 rounded-md": variant === "text",
-            "h-12 w-12 rounded-full": variant === "avatar",
-            "h-full w-full rounded-xl": variant === "card",
-            "h-10 w-24 rounded-lg": variant === "button",
-            "h-16 w-full rounded-lg": variant === "default",
+            "flex items-center space-x-3 p-3 w-full": variant === "conversation-item",
+            "h-12 w-12 rounded-full bg-gray-200/80 dark:bg-gray-700/25": variant === "avatar",
+            "h-4 w-32 bg-gray-200/80 dark:bg-gray-700/25": variant === "text",
+            "h-3 w-12 bg-gray-200/80 dark:bg-gray-700/25": variant === "time",
+            "h-6 w-2/5 bg-gray-200/80 dark:bg-gray-700/25": variant === "title",
+            "h-full w-full rounded-xl bg-gray-200/80 dark:bg-gray-700/25": variant === "card",
+            "h-10 w-24 rounded-lg bg-gray-200/80 dark:bg-gray-700/25": variant === "button",
+            "h-16 w-full rounded-lg bg-gray-200/80 dark:bg-gray-700/25": variant === "default",
           },
           className
         )}

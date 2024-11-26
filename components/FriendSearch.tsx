@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, FormEvent, useEffect } from 'react'
-import { Search, UserPlus, Clock, User, Users, Sparkles, AlertCircle } from 'lucide-react'
+import { Search, UserPlus, Clock, User, Users, Sparkles, AlertCircle, Check } from 'lucide-react'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -14,19 +14,28 @@ interface User {
   name: string | null
   email: string | null
   image: string | null
+  isFriend: boolean
+  friendRequestStatus: {
+    status: RequestStatus | null
+    senderId: string | null
+  }
 }
+
+type RequestStatus = 'PENDING' | 'ACCEPTED' | 'REJECTED'
 
 interface FriendRequestResponse {
   error?: string
   id?: string
   senderId?: string
   receiverId?: string
+  status?: RequestStatus
 }
 
 interface PendingRequest {
   id: string
   senderId: string
   receiverId: string
+  status: RequestStatus
 }
 
 export default function FriendSearch() {
@@ -34,6 +43,7 @@ export default function FriendSearch() {
   const [searchResults, setSearchResults] = useState<User[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [pendingRequests, setPendingRequests] = useState<PendingRequest[]>([])
   const [successMessage, setSuccessMessage] = useState<string>('')
 
@@ -119,21 +129,78 @@ export default function FriendSearch() {
         throw new Error(result.error)
       }
       
+      setSearchResults(prevResults =>
+        prevResults.map(user =>
+          user.id === userId
+            ? {
+                ...user,
+                friendRequestStatus: {
+                  status: 'PENDING',
+                  senderId: result.senderId || null
+                }
+              }
+            : user
+        )
+      )
+      
       setSuccessMessage('Friend request sent successfully!')
-      await fetchPendingRequests()
     } catch (error) {
       console.error("Send request error:", error)
       setError(error instanceof Error ? error.message : 'Failed to send friend request')
     }
   }
 
-  const getUserStatus = (userId: string) => {
-    const pendingRequest = pendingRequests.find(
-      request => request.senderId === userId || request.receiverId === userId
-    )
+  const getUserStatus = (user: User) => {
+    if (user.isFriend) {
+      return 'friends'
+    }
 
-    if (!pendingRequest) return 'none'
-    return pendingRequest.senderId === userId ? 'received' : 'sent'
+    if (user.friendRequestStatus?.status === 'PENDING') {
+      return user.friendRequestStatus.senderId === user.id ? 'received' : 'sent'
+    }
+
+    return 'none'
+  }
+
+  const renderButton = (user: User) => {
+    const status = getUserStatus(user)
+
+    return (
+      <Button
+        variant={status === 'friends' ? "default" : status !== 'none' ? "secondary" : "default"}
+        disabled={status !== 'none'}
+        onClick={() => status === 'none' && handleSendRequest(user.id)}
+        className={`${
+          status === 'none' 
+            ? 'bg-purple-600 hover:bg-purple-700 text-white' 
+            : status === 'friends'
+            ? 'bg-green-500 hover:bg-green-600 text-white'
+            : 'bg-gray-300 text-gray-600'
+        } h-8 md:h-10 px-3 md:px-6 rounded-full text-xs md:text-sm`}
+      >
+        {status === 'friends' ? (
+          <>
+            <Check className="w-4 h-4 md:mr-2" />
+            <span className="hidden md:inline">Friends</span>
+          </>
+        ) : status === 'sent' ? (
+          <>
+            <Clock className="w-4 h-4 md:mr-2" />
+            <span className="hidden md:inline">Request Sent</span>
+          </>
+        ) : status === 'received' ? (
+          <>
+            <UserPlus className="w-4 h-4 md:mr-2" />
+            <span className="hidden md:inline">Accept Request</span>
+          </>
+        ) : (
+          <>
+            <UserPlus className="w-4 h-4 md:mr-2" />
+            <span className="hidden md:inline">Add Friend</span>
+          </>
+        )}
+      </Button>
+    )
   }
 
   return (
@@ -179,13 +246,7 @@ export default function FriendSearch() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pr-16 pl-9 md:pl-12 py-2 md:py-6 text-sm md:text-lg rounded-full border-2 border-purple-100 focus:border-purple-300 transition-all duration-200"
               />
-              <motion.div
-                initial={{ opacity: 0.5 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
-              >
-                <Search className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-purple-400 w-4 h-4 md:w-6 md:h-6" />
-              </motion.div>
+              <Search className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-purple-400 w-4 h-4 md:w-6 md:h-6" />
             </motion.div>
             <Button 
               type="submit" 
@@ -240,8 +301,6 @@ export default function FriendSearch() {
               exit={{ opacity: 0, y: -20 }}
             >
               {searchResults.map((user: User, index) => {
-                const status = getUserStatus(user.id)
-                
                 return (
                   <motion.div
                     key={user.id}
@@ -269,42 +328,16 @@ export default function FriendSearch() {
                             </div>
                           )}
                           <div>
-                            <p className="font-semibold text-sm md:text-lg text-gray-800">{user.name}</p>
+                            <p className="font-semibold text-sm md:text-lg text-gray-800 dark:text-gray-200">{user.name}</p>
                             {user.email && (
-                              <p className="text-xs md:text-sm text-gray-600">
+                              <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
                                 {user.email}
                               </p>
                             )}
                           </div>
                         </div>
 
-                        <Button
-                          variant={status !== 'none' ? "secondary" : "default"}
-                          disabled={status !== 'none'}
-                          onClick={() => status === 'none' && handleSendRequest(user.id)}
-                          className={`${
-                            status === 'none' 
-                              ? 'bg-purple-600 hover:bg-purple-700 text-white' 
-                              : 'bg-gray-300 text-gray-600'
-                          } h-8 md:h-10 px-3 md:px-6 rounded-full text-xs md:text-sm`}
-                        >
-                          {status === 'sent' ? (
-                            <>
-                              <Clock className="w-4 h-4 md:mr-2" />
-                              <span className="hidden md:inline">Request Sent</span>
-                            </>
-                          ) : status === 'received' ? (
-                            <>
-                              <UserPlus className="w-4 h-4 md:mr-2" />
-                              <span className="hidden md:inline">Accept Request</span>
-                            </>
-                          ) : (
-                            <>
-                              <UserPlus className="w-4 h-4 md:mr-2" />
-                              <span className="hidden md:inline">Add Friend</span>
-                            </>
-                          )}
-                        </Button>
+                        {renderButton(user)}
                       </CardContent>
                     </Card>
                   </motion.div>

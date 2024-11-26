@@ -5,6 +5,11 @@ import { auth } from "@/auth";
 
 export async function GET(req: Request) {
     try {
+        const session = await auth();
+        if (!session?.user?.id) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
         const { searchParams } = new URL(req.url);
         const query = searchParams.get("q");
 
@@ -12,29 +17,6 @@ export async function GET(req: Request) {
             return new NextResponse("Search query is required", { status: 400 });
         }
 
-        const session = await auth();
-        if (!session?.user?.id) {
-            return new NextResponse("Unauthorized", { status: 401 });
-        }
-
-        // Debug: Log the search query and current user
-        // console.log("Search Query:", query);
-        console.log("Current User ID:", session.user.id);
-
-        // Debug: First check if there are any users at all (excluding current user)
-        // const allUsers = await db.user.findMany({
-        //     where: {
-        //         id: { not: session.user.id }
-        //     },
-        //     select: {
-        //         id: true,
-        //         name: true,
-        //         email: true
-        //     }
-        // });
-        // console.log("All available users:", allUsers);
-
-        // Debug: Try a simpler search first
         const users = await db.user.findMany({
             where: {
                 OR: [
@@ -49,13 +31,49 @@ export async function GET(req: Request) {
                 id: true,
                 name: true,
                 email: true,
-                image: true
+                image: true,
+                friendships1: {
+                    where: {
+                        OR: [
+                            { userId2: session.user.id },
+                            { userId1: session.user.id }
+                        ]
+                    }
+                },
+                friendships2: {
+                    where: {
+                        OR: [
+                            { userId2: session.user.id },
+                            { userId1: session.user.id }
+                        ]
+                    }
+                },
+                friendRequestsSent: {
+                    where: { receiverId: session.user.id }
+                },
+                friendRequestsReceived: {
+                    where: { senderId: session.user.id }
+                }
             }
         });
 
-        console.log("Search results:", users);
+        const enrichedUsers = users.map(user => ({
+            ...user,
+            isFriend: user.friendships1.length > 0 || user.friendships2.length > 0,
+            friendRequestStatus: {
+                status: 
+                    user.friendRequestsSent.length > 0 || user.friendRequestsReceived.length > 0 
+                        ? 'PENDING' 
+                        : null,
+                senderId: user.friendRequestsSent.length > 0 
+                    ? user.id 
+                    : user.friendRequestsReceived.length > 0 
+                    ? session.user.id 
+                    : null
+            }
+        }));
 
-        return NextResponse.json(users);
+        return NextResponse.json(enrichedUsers);
     } catch (error) {
         console.error("[SEARCH_USERS]", error);
         return new NextResponse("Internal Error", { status: 500 });

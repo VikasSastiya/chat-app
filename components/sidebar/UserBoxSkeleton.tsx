@@ -1,48 +1,76 @@
 import { Card, CardContent } from "../ui/card";
 import { Search } from "lucide-react";
+import { Skeleton } from "../ui/skeleton";
 
 export function UserBoxSkeleton() {
   return (
-    <aside className="fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80 lg:block overflow-y-auto border-r border-gray-200 block w-full left-0">
+    <aside className="fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80 lg:block overflow-y-auto border-r border-gray-200 dark:border-gray-800 block w-full left-0 bg-white dark:bg-gray-900/90">
       <div className="px-5">
-        <div className="sticky top-0 pt-4 pb-2 bg-white dark:bg-gray-900 z-10">
-          {/* Search Bar Skeleton */}
-          <div className="relative flex items-center mb-6">
+        {/* Search and Conversations Header */}
+        <div className="sticky top-0 pt-4 pb-2 z-10">
+          <div className="relative flex items-center mb-4">
             <div className="absolute left-3 flex items-center pointer-events-none">
-              <Search className="text-gray-400 dark:text-gray-500" size={20} />
+              <Search className="text-gray-500" size={20} />
             </div>
-            <div className="pl-10 h-10 w-full bg-gray-200 dark:bg-gray-800 rounded-md animate-pulse" />
+            <Skeleton className="pl-10 h-10 w-full" />
           </div>
-
-          {/* Friends Header Skeleton */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="h-6 w-24 bg-gray-200 dark:bg-gray-800 rounded animate-pulse" />
-            <div className="h-6 w-8 bg-gray-200 dark:bg-gray-800 rounded-full animate-pulse" />
+          
+          {/* Conversations Header */}
+          <div className="flex items-center justify-between mb-4">
+            <Skeleton className="h-6 w-28" />
+            <Skeleton className="h-6 w-6 rounded-full" />
           </div>
         </div>
 
-        {/* Friend List Skeleton Items */}
-        <nav className="space-y-2 pb-6">
-          {[1, 2, 3].map((index) => (
-            <Card key={index} className="w-full transition-shadow duration-300 ease-in-out">
-              <CardContent className="p-1">
-                <div className="relative w-full flex items-center gap-4 p-1 rounded-xl">
-                  <div className="relative shrink-0">
-                    <div className="h-12 w-12 rounded-full bg-gray-200 dark:bg-gray-800 animate-pulse ring-2 ring-offset-2 ring-gray-100 dark:ring-gray-800" />
-                  </div>
-
-                  <div className="min-w-0 flex-1 relative">
-                    <div className="flex flex-col">
-                      <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-24 mb-2" />
-                      <div className="h-3.5 bg-gray-200 dark:bg-gray-800 rounded w-32" />
+        {/* Groups Section */}
+        <div className="mb-6">
+          <div className="text-sm font-semibold mb-2">
+            <Skeleton className="h-4 w-16" />
+          </div>
+          <nav className="space-y-1">
+            {[1, 2, 3].map((index) => (
+              <Card key={`group-${index}`} className="w-full bg-gray-50 dark:bg-gray-800/50">
+                <CardContent className="p-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <Skeleton variant="avatar" className="h-10 w-10" />
+                      <div className="flex flex-col space-y-1">
+                        <Skeleton variant="text" className="w-24 h-3.5" />
+                        <Skeleton variant="text" className="w-32 h-3" />
+                      </div>
                     </div>
-                    <div className="absolute top-0 right-0 h-3 bg-gray-200 dark:bg-gray-800 rounded w-10" />
+                    <Skeleton variant="time" className="w-10 h-3" />
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </nav>
+                </CardContent>
+              </Card>
+            ))}
+          </nav>
+        </div>
+
+        {/* Direct Messages Section */}
+        <div>
+          <div className="text-sm font-semibold mb-2">
+            <Skeleton className="h-4 w-32" />
+          </div>
+          <nav className="space-y-1">
+            {[1, 2, 3, 4].map((index) => (
+              <Card key={`dm-${index}`} className="w-full bg-gray-50 dark:bg-gray-800/50">
+                <CardContent className="p-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <Skeleton variant="avatar" className="h-10 w-10" />
+                      <div className="flex flex-col space-y-1">
+                        <Skeleton variant="text" className="w-24 h-3.5" />
+                        <Skeleton variant="text" className="w-32 h-3" />
+                      </div>
+                    </div>
+                    <Skeleton variant="time" className="w-10 h-3" />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </nav>
+        </div>
       </div>
     </aside>
   );

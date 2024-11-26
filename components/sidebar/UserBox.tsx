@@ -109,7 +109,15 @@ const UserBox: React.FC<UserBoxProps> = ({ data, conversations, selected }) => {
             <div className="focus:outline-none">
               <div className="flex flex-col items-start">
                 <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                  {data.isGroup ? conversation?.name || 'Group Chat' : data.name}
+                  {data.isGroup ? (
+                    (conversation?.name || 'Group Chat').length > 15
+                    ? `${(conversation?.name || 'Group Chat').substring(0, 12)}...`
+                    : (conversation?.name || 'Group Chat')
+                  ) : (
+                    (data.name || 'Unknown User').length > 15
+                    ? `${(data.name || 'Unknown User').substring(0, 12)}...`
+                    : (data.name || 'Unknown User')
+                  )}
                 </p>
                 <p className={clsx(
                   "truncate text-sm mt-1",
