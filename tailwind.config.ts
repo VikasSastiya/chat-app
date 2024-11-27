@@ -68,12 +68,32 @@ const config: Config = {
         slideUp: {
           '0%': { transform: 'translateY(10px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' }
-        }
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
+        marquee2: {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(0%)' },
+        },
+        'marquee-reverse': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(0%)' },
+        },
+        'marquee2-reverse': {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
       },
       animation: {
         shimmer: 'shimmer 2s linear infinite',
         fadeIn: 'fadeIn 0.3s ease-in-out',
-        slideUp: 'slideUp 0.3s ease-out'
+        slideUp: 'slideUp 0.3s ease-out',
+        marquee: 'marquee 25s linear infinite',
+        marquee2: 'marquee2 25s linear infinite',
+        'marquee-reverse': 'marquee-reverse 25s linear infinite',
+        'marquee2-reverse': 'marquee2-reverse 25s linear infinite',
       },
       transitionDuration: {
         '2000': '2000ms',
