@@ -43,7 +43,7 @@ export default function FeaturesSection() {
     router.push("/auth/login");
   };
   return (
-    <section className="px-4 py-16 md:py-24">
+    <section className="px-0 md:px-4 py-16 md:py-24">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <div className="inline-block px-4 py-2 rounded-full bg-purple-100 text-purple-700 font-semibold mb-6">
@@ -67,18 +67,84 @@ export default function FeaturesSection() {
           </Button>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="flex items-center gap-2 bg-white rounded-full px-4 py-3 shadow-sm hover:shadow-md transition-shadow"
-            >
-              <feature.icon className="w-5 h-5 text-gray-600" />
-              <span className="text-sm font-medium whitespace-nowrap">
-                {feature.text}
-              </span>
+        {/* First Marquee */}
+        <div className="py-2">
+          <div className="relative flex overflow-hidden">
+            <div className="animate-marquee whitespace-nowrap py-2 ">
+              {features.map((feature, index) => (
+                <div
+                  key={index}
+                  className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-3 shadow-sm mx-4"
+                >
+                  <feature.icon className="w-5 h-5 text-gray-600" />
+                  <span className="text-sm font-medium">{feature.text}</span>
+                </div>
+              ))}
             </div>
-          ))}
+            <div className="absolute top-0 animate-marquee2 whitespace-nowrap py-2">
+              {features.map((feature, index) => (
+                <div
+                  key={index}
+                  className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-3 shadow-sm mx-4"
+                >
+                  <feature.icon className="w-5 h-5 text-gray-600" />
+                  <span className="text-sm font-medium">{feature.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Second Marquee (Reversed) */}
+          <div className="relative flex overflow-x-hidden mt-2">
+            <div className="animate-marquee-reverse whitespace-nowrap py-2">
+              {features.map((feature, index) => (
+                <div
+                  key={index}
+                  className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-3 shadow-sm mx-4"
+                >
+                  <feature.icon className="w-5 h-5 text-gray-600" />
+                  <span className="text-sm font-medium">{feature.text}</span>
+                </div>
+              ))}
+            </div>
+            <div className="absolute top-0 animate-marquee2-reverse whitespace-nowrap py-2">
+              {features.map((feature, index) => (
+                <div
+                  key={index}
+                  className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-3 shadow-sm mx-4"
+                >
+                  <feature.icon className="w-5 h-5 text-gray-600" />
+                  <span className="text-sm font-medium">{feature.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Third Marquee */}
+          <div className="relative flex overflow-x-hidden mt-2">
+            <div className="animate-marquee whitespace-nowrap py-2">
+              {features.map((feature, index) => (
+                <div
+                  key={index}
+                  className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-3 shadow-sm mx-4"
+                >
+                  <feature.icon className="w-5 h-5 text-gray-600" />
+                  <span className="text-sm font-medium">{feature.text}</span>
+                </div>
+              ))}
+            </div>
+            <div className="absolute top-0 animate-marquee2 whitespace-nowrap py-2">
+              {features.map((feature, index) => (
+                <div
+                  key={index}
+                  className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-3 shadow-sm mx-4"
+                >
+                  <feature.icon className="w-5 h-5 text-gray-600" />
+                  <span className="text-sm font-medium">{feature.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

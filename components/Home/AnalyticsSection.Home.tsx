@@ -14,7 +14,7 @@ export default function AnalyticsSection() {
             <br />
             anytime, anywhere
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-[#282828] max-w-2xl mx-auto">
             Experience seamless communication with our free messaging platform.
             Start meaningful conversations and stay connected with friends,
             family and colleagues instantly.
@@ -25,7 +25,7 @@ export default function AnalyticsSection() {
             <h3 className="text-3xl font-bold mb-6">
               Chat and connect in real-time
             </h3>
-            <p className="text-gray-600 mb-8">
+            <p className="text-[#282828] mb-8">
               Our platform provides a smooth messaging experience with instant
               delivery and real-time status updates, helping you stay in sync
               with your conversations.
@@ -40,7 +40,7 @@ export default function AnalyticsSection() {
                   <div className="mt-1 bg-[#8026ce] rounded-full p-1">
                     <Check className="w-4 h-4 text-white" />
                   </div>
-                  <span className="text-gray-600">{feature}</span>
+                  <span className="text-[#282828]">{feature}</span>
                 </li>
               ))}
             </ul>
@@ -56,7 +56,7 @@ export default function AnalyticsSection() {
                 className="w-full h-auto"
               />
             </div>
-            <div className="absolute bottom-[-5vh] left-[-15vh] w-[70vh] bg-white/95 backdrop-blur rounded-lg p-4 shadow-lg">
+            <div className="absolute bottom-[-10vh] lg:bottom-[-10vh] left-[-2vh] md:left-[-15vh] lg:left-[-20vh] xl:left-[-15vh] w-[80vw] sm:w-[50vh] lg:w-[70vh] bg-white/95 rounded-lg p-4 shadow-md ">
               <div className="flex items-center gap-3">
                 <Image
                   width={70}
@@ -67,7 +67,7 @@ export default function AnalyticsSection() {
                 ></Image>
                 <div>
                   <p className="font-semibold">Hazel Heart</p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-[#282828]">
                     &quot;Supermi makes staying in touch so easy! The instant
                     messaging and real-time features help me connect with
                     everyone effortlessly.&quot;
@@ -83,7 +83,7 @@ export default function AnalyticsSection() {
             <h3 className="text-3xl font-bold mb-6">
               Chat and connect in real-time
             </h3>
-            <p className="text-gray-600 mb-8">
+            <p className="text-[#282828] mb-8">
               Our platform provides a smooth messaging experience with instant
               delivery and real-time status updates, helping you stay in sync
               with your conversations.
@@ -98,7 +98,7 @@ export default function AnalyticsSection() {
                   <div className="mt-1 bg-[#8026ce] rounded-full p-1">
                     <Check className="w-4 h-4 text-white" />
                   </div>
-                  <span className="text-gray-600">{feature}</span>
+                  <span className="text-[#282828]">{feature}</span>
                 </li>
               ))}
             </ul>
@@ -114,7 +114,10 @@ export default function AnalyticsSection() {
                 className="w-full h-auto"
               />
             </div>
-            <div className="absolute bottom-[-5vh] left-[15vh] w-[70vh] bg-white/95 backdrop-blur rounded-lg p-4 shadow-lg">
+            <div
+              className="absolute bottom-[-10vh] lg:bottom-[-10vh] left-[-2vh] lg:left-[20vh] xl:left-[15vh] w-[80vw] sm:w-[50vh]
+             lg:w-[70vh] bg-white/95 rounded-lg p-4 shadow-md "
+            >
               <div className="flex items-center gap-3">
                 <Image
                   width={70}
@@ -125,8 +128,11 @@ export default function AnalyticsSection() {
                 ></Image>
                 <div>
                   <p className="font-semibold">Mia MalKova</p>
-                  <p className="text-sm text-gray-600">
-                    &quot;This platform helps me connect with my fans in a professional and appropriate way. The messaging features are great for keeping conversations respectful and maintaining healthy boundaries.&quot;
+                  <p className="text-sm text-[#282828]">
+                    &quot;This platform helps me connect with my fans in a
+                    professional and appropriate way. The messaging features are
+                    great for keeping conversations respectful and maintaining
+                    healthy boundaries.&quot;
                   </p>
                 </div>
               </div>

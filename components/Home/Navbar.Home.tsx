@@ -30,7 +30,7 @@ const Navbar: React.FC = () => {
             <button
               onClick={onClick}
               disabled={isLoading}
-              className="h-full font-[600] text-[15px] text-[#000] cursor-pointer bg-slate-50 px-[17px]  rounded-[30px] flex justify-center items-center gap-2"
+              className="h-full w-16 font-[600] text-[15px] text-[#000] cursor-pointer bg-slate-50 px-[17px]  rounded-[30px] flex justify-center items-center gap-2"
             >
               {isLoading ? (
                 <div className="w-4 h-4 border-2 border-[#121212] border-t-transparent rounded-full animate-spin" />

@@ -82,35 +82,3 @@ body,
     @apply bg-background text-foreground;
   }
 }
-
-/* 
-.container {
-  height: 100%;
-  width: 100%;
-  display: inline-flex;
-  justify-content: space-evenly;
-  animation-duration: 10s;
-  animation-name: marqueeAnimation;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-.container2 {
-  height: 100%;
-  width: 100%;
-  display: inline-flex;
-  justify-content: space-evenly;
-  animation-duration: 10s;
-  animation-name: marqueeAnimation;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-direction: reverse;
-} */
-
-@keyframes marqueeAnimation {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(calc(-100%));
-  }
-}
