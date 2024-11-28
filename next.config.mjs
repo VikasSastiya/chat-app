@@ -8,7 +8,10 @@ const nextConfig = {
         'platform-lookaside.fbsbx.com',
         'randomuser.me'
       ]
-    }
+    },
+    experimental: {
+      missingSuspenseWithCSRBailout: false,
+    },
   }
   
 export default nextConfig;
