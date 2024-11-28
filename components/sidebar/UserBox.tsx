@@ -11,6 +11,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { format } from 'date-fns';
 import axios from 'axios';
 import AvatarGroup from './AvatarGroup';
+import nProgress from 'nprogress';
 
 interface UserBoxProps {
   data: User & { isGroup?: boolean };
@@ -58,6 +59,7 @@ const UserBox: React.FC<UserBoxProps> = ({ data, conversations, selected }) => {
   }, [lastMessage]);
 
   const handleClick = useCallback(async () => {
+    nProgress.start();
     if (conversation) {
       router.push(`/conversations/${conversation.id}`);
       return;
@@ -71,11 +73,14 @@ const UserBox: React.FC<UserBoxProps> = ({ data, conversations, selected }) => {
       router.push(`/conversations/${response.data.id}`);
     } catch (error) {
       console.error('Error creating conversation:', error);
+      nProgress.done();
     }
   }, [data.id, router, conversation]);
 
   return (
-    <Card className={clsx(
+    <Card
+      data-conversation 
+      className={clsx(
       "w-full transition-shadow duration-300 ease-in-out hover:shadow-lg",
       selected && "bg-blue-100"
     )}>
@@ -110,14 +115,29 @@ const UserBox: React.FC<UserBoxProps> = ({ data, conversations, selected }) => {
               <div className="flex flex-col items-start">
                 <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                   {data.isGroup ? (
-                    (conversation?.name || 'Group Chat').length > 15
-                    ? `${(conversation?.name || 'Group Chat').substring(0, 12)}...`
-                    : (conversation?.name || 'Group Chat')
+                    <span className="block lg:hidden">
+                      {(conversation?.name || 'Group Chat').length > 20
+                        ? `${(conversation?.name || 'Group Chat').substring(0, 24)}...`
+                        : (conversation?.name || 'Group Chat')}
+                    </span>
                   ) : (
-                    (data.name || 'Unknown User').length > 15
-                    ? `${(data.name || 'Unknown User').substring(0, 12)}...`
-                    : (data.name || 'Unknown User')
+                    <span className="block lg:hidden">
+                      {(data.name || 'Unknown User').length > 20
+                        ? `${(data.name || 'Unknown User').substring(0, 24)}...`
+                        : (data.name || 'Unknown User')}
+                    </span>
                   )}
+                  <span className="hidden lg:block">
+                    {data.isGroup ? (
+                      (conversation?.name || 'Group Chat').length > 15
+                      ? `${(conversation?.name || 'Group Chat').substring(0, 12)}...`
+                      : (conversation?.name || 'Group Chat')
+                    ) : (
+                      (data.name || 'Unknown User').length > 15
+                      ? `${(data.name || 'Unknown User').substring(0, 12)}...`
+                      : (data.name || 'Unknown User')
+                    )}
+                  </span>
                 </p>
                 <p className={clsx(
                   "truncate text-sm mt-1",
@@ -127,7 +147,7 @@ const UserBox: React.FC<UserBoxProps> = ({ data, conversations, selected }) => {
                 </p>
               </div>
               {lastMessage?.createdAt && (
-                <p className="absolute -top-0.5 right-2 text-xs text-gray-500">
+                <p className="absolute -top-1.5 -right-1 text-xs text-gray-500">
                   {format(new Date(lastMessage.createdAt), 'p')}
                 </p>
               )}

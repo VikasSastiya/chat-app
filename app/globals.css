@@ -82,3 +82,24 @@ body,
     @apply bg-background text-foreground;
   }
 }
+
+/* Make the bar thinner and style it */
+#nprogress .bar {
+  background: #7c3aed !important; /* Change color to match your theme */
+  height: 2px !important;
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+/* Remove the spinning loader */
+#nprogress .spinner {
+  display: none;
+}
+
+/* Optional: Add a subtle glow effect */
+#nprogress .peg {
+  box-shadow: 0 0 10px #7c3aed, 0 0 5px #7c3aed;
+}

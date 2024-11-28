@@ -16,6 +16,7 @@ import { pusherClient } from '@/lib/pusher';
 import { find } from 'lodash';
 import { useRouter } from 'next/navigation';
 import ThemeSwitch from '@/components/ThemeSwitch';
+import NProgress from 'nprogress';
 
 interface FriendListProps {
   conversations: FullConversationType[];
@@ -35,6 +36,40 @@ export default function FriendList({ conversations: initialConversations }: Frie
   const router = useRouter();
   
   const pusherKey = session.data?.user?.email;
+  
+  // Configure NProgress once when component mounts
+  useEffect(() => {
+    NProgress.configure({ 
+      minimum: 0.3,
+      easing: 'ease',
+      speed: 400,
+      trickleSpeed: 80,
+      showSpinner: false,
+    });
+  }, []);
+  // Handle route changes to complete the loader
+  useEffect(() => {
+    const handleRouteChange = () => {
+      NProgress.done();
+    };
+
+    const handleRouteChangeError = () => {
+      NProgress.done();
+    };
+
+    // Use Next.js 13+ App Router navigation events
+    const unsubscribe = () => {
+      document.removeEventListener('routeChangeStart', handleRouteChange);
+      document.removeEventListener('routeChangeComplete', handleRouteChange);
+      document.removeEventListener('routeChangeError', handleRouteChangeError);
+    };
+
+    document.addEventListener('routeChangeStart', handleRouteChange);
+    document.addEventListener('routeChangeComplete', handleRouteChange);
+    document.addEventListener('routeChangeError', handleRouteChangeError);
+
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     if (!pusherKey) return;
@@ -196,9 +231,13 @@ export default function FriendList({ conversations: initialConversations }: Frie
         "fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80 lg:block overflow-y-auto border-r",
         "bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800",
         "transition-all duration-300 ease-in-out",
-        isOpen ? "hidden" : "block w-full left-0"
+        isOpen ? "hidden" : "block w-full left-0",
+        "scrollbar-thin scrollbar-thumb-rounded-full",
+        "scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600",
+        "scrollbar-track-transparent hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-500",
+        "pr-0.5"
       )}>
-        <div className="px-5">
+        <div className="px-5 w-full">
           {/* Search and Header Section */}
           <div className="sticky top-0 pt-4 pb-2 bg-white dark:bg-gray-900 z-10">
             <div className="relative flex items-center mb-4">
@@ -296,6 +335,20 @@ export default function FriendList({ conversations: initialConversations }: Frie
           </div>
         </div>
       </aside>
+      <style jsx global>{`
+        .scrollbar-thin::-webkit-scrollbar {
+          width: 4px;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+          border-radius: 9999px;
+        }
+
+        /* Ensure content doesn't shrink when scrollbar appears */
+        .scrollbar-thin {
+          scrollbar-gutter: stable;
+        }
+      `}</style>
     </>
   );
 }

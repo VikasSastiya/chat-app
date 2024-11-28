@@ -2,6 +2,7 @@ import Sidebar from "@/components/sidebar/Sidebar";
 import FriendList from "@/components/sidebar/FriendList";
 import getConversations from "@/hooks/conversations/getConversations";
 import MobileNavigationWrapper from "@/components/MobileNavigationWrapper";
+import LoadingBar from "@/app/loader";
 
 export default async function UsersLayout({
   children,
@@ -19,13 +20,16 @@ export default async function UsersLayout({
   }));
 
   return (
-    <Sidebar>
-      <MobileNavigationWrapper>
-        <div className="h-full">
-          <FriendList conversations={conversations} />
-        </div>
-        {children}
-      </MobileNavigationWrapper>
-    </Sidebar>
+    <>
+      <LoadingBar />
+      <Sidebar>
+        <MobileNavigationWrapper>
+          <div className="h-full">
+            <FriendList conversations={conversations} />
+          </div>
+          {children}
+        </MobileNavigationWrapper>
+      </Sidebar>
+    </>
   );
 }

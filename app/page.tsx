@@ -27,7 +27,7 @@ export default async function Home() {
               </div>
             </div>
           </div>
-          <div className="min-h-[100vh] w-full p-4 ">
+          <div className="min-h-[100vh] w-full">
             <AnalyticsSection />
             <FeaturesSection />
           </div>
