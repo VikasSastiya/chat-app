@@ -54,8 +54,8 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({ isOpen, users, onClose 
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="space-y-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Create a Group Chat</h2>
-          <p className="mt-1 text-sm text-gray-600">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Create a Group Chat</h2>
+          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
             Connect with multiple people in a single conversation
           </p>
         </div>
@@ -70,21 +70,19 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({ isOpen, users, onClose 
               required
             />
             <div>
-              <label className="block text-sm font-medium text-gray-700">Members</label>
-              {/* <ScrollArea className="h-[100px] border rounded-md mt-1 p-2"> */}
-                <Select
-                  disabled={isLoading}
-                  label=""
-                  options={users.map((user) => ({
-                    value: user.id,
-                    label: user.name || "Unnamed User"
-                  }))}
-                  onChange={(value) => setValue("members", value, { shouldValidate: true })}
-                  value={members}
-                />
-              {/* </ScrollArea> */}
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Members</label>
+              <Select
+                disabled={isLoading}
+                label=""
+                options={users.map((user) => ({
+                  value: user.id,
+                  label: user.name || "Unnamed User"
+                }))}
+                onChange={(value) => setValue("members", value, { shouldValidate: true })}
+                value={members}
+              />
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
+            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
               <Users className="w-4 h-4" />
               <p>Select more than 2 members to create a group</p>
             </div>
@@ -94,14 +92,15 @@ const GroupChatModal: React.FC<GroupChatModalProps> = ({ isOpen, users, onClose 
               type="button"
               onClick={onClose}
               disabled={isLoading}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500"
+              variant="outline"
+              className="px-4 py-2 text-sm font-medium dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 dark:hover:bg-gray-700 transition-colors"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isLoading || members.length < 2}
-              className="px-4 py-2 text-sm font-medium text-white bg-sky-600 rounded-md shadow-sm hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 text-sm font-medium text-white bg-purple-600 dark:bg-purple-600 rounded-md shadow-sm hover:bg-purple-700 dark:hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Create Group
             </Button>

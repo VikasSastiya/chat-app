@@ -31,13 +31,13 @@ const useRoutes = () => {
             label: 'Chat',
             href: '/conversations',
             icon: HiChat,
-            active: pathname === '/conversations'
+            active: pathname === '/conversations' || pathname.startsWith('/conversations/') && pathname !== '/conversations/add' && pathname !== '/conversations/requests'
         },
         {
             label: 'Users',
             href: '/conversations/add',
             icon: HiUserAdd,
-            active: pathname === '/conversations/add' || !!conversationId
+            active: pathname === '/conversations/add'
         },
         {
             label: 'Friend Requests',
