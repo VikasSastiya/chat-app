@@ -3,6 +3,8 @@ import HeroSection from "@/components/Home/HeroSection.Home";
 import AnalyticsSection from "@/components/Home/AnalyticsSection.Home";
 import FeaturesSection from "@/components/Home/FeaturesSection.Home";
 import Footer from "@/components/Home/Footer.Home";
+import Image from "next/image";
+
 export default async function Home() {
   return (
     <>
@@ -19,10 +21,13 @@ export default async function Home() {
             <HeroSection />
             <div className="w-full overflow-hidden mt-[8vh] ">
               <div className="max-w-[70rem] mx-auto bg-[#ffffff] rounded-2xl border-[2px] border-white ">
-                <img
-                  className="object-cover p-5 rounded-2xl "
-                  src="./chat-onn.png"
+                <Image
+                  className="object-cover p-5 rounded-2xl"
+                  src="/chat-onn.png"
                   alt="chat-onn.png"
+                  width={1200}
+                  height={800}
+                  priority
                 />
               </div>
             </div>

@@ -1,6 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Image from "next/image";
+
 const Navbar: React.FC = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -13,10 +15,13 @@ const Navbar: React.FC = () => {
       <div className="h-[4.5vh] w-full flex justify-center items-center select-none ">
         <div className="h-full max-w-[43rem] mx-auto w-full flex justify-between items-center px-1 py-1 bg-[#000] text-white rounded-[25px] ">
           <div className="font-[500] text-[20px] font-[Mona Sans] flex justify-center items-center gap-1 pl-2  cursor-pointer">
-            <img
-              className="object-cover w-[33px] "
-              src="logo1.png"
+            <Image
+              className="object-cover w-[33px]"
+              src="/logo1.png"
               alt="logo"
+              width={33}
+              height={33}
+              priority
             />
             Supermi
           </div>
