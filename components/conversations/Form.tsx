@@ -13,12 +13,13 @@ import {
 } from "next-cloudinary";
 import { useDispatch } from "react-redux";
 import { addMessage } from "@/store/Slices/message";
-// import { CloudinaryResult } from '@/types';
-
+import { useSession } from "next-auth/react";
+import { FullMessageType } from "@/types";
 const Form = () => {
   const dispatch = useDispatch();
   const { conversationId } = useConversation();
-
+  const session = useSession();
+  console.log(session?.data?.user);
   const {
     register,
     handleSubmit,
@@ -30,20 +31,25 @@ const Form = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = (data: any) => {
-    // dispatch(addMessage(data));
-    const message: any = {
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    if (!session?.data?.user?.id) return;
+    const message: FullMessageType = {
       id: "1",
       body: data.message,
       createdAt: new Date(),
-      senderId: "1",
+      senderId: session?.data?.user?.id,
       seenBy: [],
       conversationId: conversationId,
       image: null,
       sender: {
-        id: "1",
-        name: "John Doe",
-        image: null,
+        id: session?.data?.user?.id,
+        name: session?.data?.user?.name,
+        image: session?.data?.user?.image,
+        email: session?.data?.user?.email,
+        emailVerified: session?.data?.user?.emailVerified,
+        password: session?.data?.user?.password,
+        createdAt: session?.data?.user?.createdAt,
+        updatedAt: session?.data?.user?.updatedAt,
       },
     };
     dispatch(addMessage(message));
