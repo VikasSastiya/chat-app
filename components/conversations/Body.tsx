@@ -1,23 +1,21 @@
 "use client";
-
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { FullMessageType } from "@/types";
 import useConversation from "@/hooks/conversations/useCurrentConversation";
 import MessageBox from "@/components/conversations/MessageBox";
 import axios from "axios";
 import { format, isToday, isYesterday } from "date-fns";
 import { pusherClient } from "@/lib/pusher";
-import { find } from "lodash";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useDispatch } from "react-redux";
-import { addMessage, setMessages } from "@/store/Slices/message";
+import { setMessages, updateMessage } from "@/store/Slices/message";
 
 interface BodyProps {
   initialMessages: FullMessageType[];
 }
 
-export default function Component({ initialMessages }: any) {
+export default function Body({ initialMessages }: BodyProps) {
   const messages = useSelector((state: RootState) => state.message.messages);
   const dispatch = useDispatch();
 
@@ -38,7 +36,7 @@ export default function Component({ initialMessages }: any) {
   useEffect(() => {
     dispatch(setMessages(initialMessages));
     scrollToBottom();
-  }, []);
+  }, [dispatch, initialMessages]);
 
   useEffect(() => {
     const shouldScrollToBottom =
@@ -59,30 +57,18 @@ export default function Component({ initialMessages }: any) {
     if (!conversationId) return;
 
     pusherClient.subscribe(conversationId);
-    console.log(messages);
+
     const messageHandler = (message: FullMessageType) => {
       if (message.conversationId === conversationId) {
-        setMessages((current) => {
-          if (find(current, { id: message.id })) {
-            return current;
-          }
-          return [...current, message];
-        });
-
+        dispatch(updateMessage(message));
         bottomRef?.current?.scrollIntoView();
       }
     };
 
     const updateMessageHandler = (newMessage: FullMessageType) => {
       if (newMessage.conversationId === conversationId) {
-        setMessages((current) =>
-          current.map((currentMessage) => {
-            if (currentMessage.id === newMessage.id) {
-              return newMessage;
-            }
-            return currentMessage;
-          })
-        );
+        dispatch(updateMessage(newMessage));
+        bottomRef?.current?.scrollIntoView();
       }
     };
 
@@ -94,7 +80,7 @@ export default function Component({ initialMessages }: any) {
       pusherClient.unbind("messages:new", messageHandler);
       pusherClient.unbind("message:update", updateMessageHandler);
     };
-  }, [conversationId]);
+  }, [conversationId, dispatch]);
 
   const groupedMessages = messages.reduce((acc, message) => {
     const date = new Date(message.createdAt);
@@ -134,7 +120,7 @@ export default function Component({ initialMessages }: any) {
                   </span>
                 </div>
               </div>
-              <div className="mt-4 md:w-2/3">
+              <div className="mt-4 md:w-2/3 ">
                 {msgs.map((message, i) => (
                   <MessageBox
                     isLast={i === msgs.length - 1}
