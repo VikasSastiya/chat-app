@@ -8,6 +8,7 @@ import Avatar from "@/components/sidebar/Avatar";
 import { format, isToday, isYesterday, differenceInMinutes } from "date-fns";
 import Image from "next/image";
 import ImageModal from "@/components/conversations/ImageModal";
+import { motion } from "framer-motion";
 
 interface MessageBoxProps {
     data: FullMessageType,
@@ -67,7 +68,7 @@ export default function MessageBox({
         differenceInMinutes(currentMessageDate, new Date(previousMessage.createdAt)) >= 1;
 
     return (
-        <div className={container}>
+        <div className={`${container}`}>
             {showDatePartition && (
                 <div className="w-full my-2 text-center">
                     <div className="relative">
@@ -84,7 +85,11 @@ export default function MessageBox({
                     size="medium"
                 />
             </div>
-            <div className={body}>
+            <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className={`${body} `}>
                 <div className={clsx(message, "relative min-w-[60px]")}> {/* Added min-width for short messages */}
                     <ImageModal 
                         isOpen={imageModalOpen} 
@@ -113,7 +118,7 @@ export default function MessageBox({
                         {`Seen by ${seenList}`}
                     </div>
                 )}
-            </div>
+            </motion.div>
         </div>
     );
 }
