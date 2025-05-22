@@ -1,4 +1,4 @@
-import {NextResponse} from "next/server";
+import { NextResponse } from "next/server";
 import getCurrentUser from "@/hooks/users/getCurrentUser";
 import { db } from "@/lib/db";
 import { pusherServer } from "@/lib/pusher";
@@ -19,52 +19,52 @@ export async function POST(request: Request) {
                 image: image,
                 conversation: {
                     connect: {
-                        id: conversationId
-                    }
+                        id: conversationId,
+                    },
                 },
                 sender: {
                     connect: {
-                        id: currentUser.id
-                    }
+                        id: currentUser.id,
+                    },
                 },
                 seenBy: {
                     connect: {
-                        id: currentUser.id
-                    }
-                }
+                        id: currentUser.id,
+                    },
+                },
             },
             include: {
                 seenBy: true,
-                sender: true
-            }
+                sender: true,
+            },
         });
 
-        await pusherServer.trigger(conversationId, 'messages:new', {
+        await pusherServer.trigger(conversationId, "messages:new", {
             ...newMessage,
-            conversationId
+            conversationId,
         });
 
         await db.conversation.update({
             where: {
-                id: conversationId
+                id: conversationId,
             },
             data: {
-                lastMessageAt: new Date()
-            }
+                lastMessageAt: new Date(),
+            },
         });
 
         const conversation = await db.conversation.findUnique({
             where: { id: conversationId },
-            include: { users: true }
+            include: { users: true },
         });
 
         if (conversation) {
             conversation.users.forEach((user) => {
                 if (user.email) {
-                    pusherServer.trigger(user.email, 'conversation:update', {
+                    pusherServer.trigger(user.email, "conversation:update", {
                         id: conversationId,
                         lastMessageAt: new Date(),
-                        lastMessage: newMessage
+                        lastMessage: newMessage,
                     });
                 }
             });

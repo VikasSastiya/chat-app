@@ -14,18 +14,20 @@ export async function GET(req: Request) {
         const query = searchParams.get("q");
 
         if (!query) {
-            return new NextResponse("Search query is required", { status: 400 });
+            return new NextResponse("Search query is required", {
+                status: 400,
+            });
         }
 
         const users = await db.user.findMany({
             where: {
                 OR: [
-                    { email: { contains: query, mode: 'insensitive' } },
-                    { name: { contains: query, mode: 'insensitive' } }
+                    { email: { contains: query, mode: "insensitive" } },
+                    { name: { contains: query, mode: "insensitive" } },
                 ],
                 AND: {
-                    id: { not: session.user.id }
-                }
+                    id: { not: session.user.id },
+                },
             },
             select: {
                 id: true,
@@ -36,41 +38,44 @@ export async function GET(req: Request) {
                     where: {
                         OR: [
                             { userId2: session.user.id },
-                            { userId1: session.user.id }
-                        ]
-                    }
+                            { userId1: session.user.id },
+                        ],
+                    },
                 },
                 friendships2: {
                     where: {
                         OR: [
                             { userId2: session.user.id },
-                            { userId1: session.user.id }
-                        ]
-                    }
+                            { userId1: session.user.id },
+                        ],
+                    },
                 },
                 friendRequestsSent: {
-                    where: { receiverId: session.user.id }
+                    where: { receiverId: session.user.id },
                 },
                 friendRequestsReceived: {
-                    where: { senderId: session.user.id }
-                }
-            }
+                    where: { senderId: session.user.id },
+                },
+            },
         });
 
-        const enrichedUsers = users.map(user => ({
+        const enrichedUsers = users.map((user) => ({
             ...user,
-            isFriend: user.friendships1.length > 0 || user.friendships2.length > 0,
+            isFriend:
+                user.friendships1.length > 0 || user.friendships2.length > 0,
             friendRequestStatus: {
-                status: 
-                    user.friendRequestsSent.length > 0 || user.friendRequestsReceived.length > 0 
-                        ? 'PENDING' 
+                status:
+                    user.friendRequestsSent.length > 0 ||
+                    user.friendRequestsReceived.length > 0
+                        ? "PENDING"
                         : null,
-                senderId: user.friendRequestsSent.length > 0 
-                    ? user.id 
-                    : user.friendRequestsReceived.length > 0 
-                    ? session.user.id 
-                    : null
-            }
+                senderId:
+                    user.friendRequestsSent.length > 0
+                        ? user.id
+                        : user.friendRequestsReceived.length > 0
+                          ? session.user.id
+                          : null,
+            },
         }));
 
         return NextResponse.json(enrichedUsers);

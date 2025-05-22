@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import useActiveChannel from "@/hooks/utils/useActiveChannel";
 
@@ -8,4 +8,4 @@ const ActiveStatus = () => {
     return null;
 };
 
-export default ActiveStatus
+export default ActiveStatus;

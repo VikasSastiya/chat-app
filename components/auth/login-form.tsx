@@ -1,9 +1,9 @@
 "use client";
 
-import * as z from "zod"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { LoginSchema } from "@/schemas"
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginSchema } from "@/schemas";
 import {
     Form,
     FormControl,
@@ -11,9 +11,9 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 import { useState, useTransition } from "react";
-import { CardWrapper } from "@/components/auth/card-wrapper"
+import { CardWrapper } from "@/components/auth/card-wrapper";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
@@ -25,7 +25,10 @@ import { Loader } from "lucide-react";
 
 export const LoginForm = () => {
     const searchParams = useSearchParams();
-    const urlError = searchParams?.get("error") === "OAuthAccountNotLinked" ? "Email is already in use with different provider" : ""
+    const urlError =
+        searchParams?.get("error") === "OAuthAccountNotLinked"
+            ? "Email is already in use with different provider"
+            : "";
 
     const [isPending, startTransition] = useTransition();
     const [error, setError] = useState<string | undefined>("");
@@ -36,8 +39,8 @@ export const LoginForm = () => {
         defaultValues: {
             email: "",
             password: "",
-        }
-    })
+        },
+    });
 
     const onSubmit = (values: z.infer<typeof LoginSchema>) => {
         setError("");
@@ -46,14 +49,14 @@ export const LoginForm = () => {
         startTransition(() => {
             login(values)
                 .then((data) => {
-                    setError(data?.error)
-                    setSuccess(data?.success)
+                    setError(data?.error);
+                    setSuccess(data?.success);
                 })
                 .finally(() => {
                     setIsLoading(false);
                 });
         });
-    }
+    };
 
     return (
         <CardWrapper
@@ -62,10 +65,8 @@ export const LoginForm = () => {
             backButtonHref="/auth/register"
             showSocial
         >
-            <Form 
-            
-            {...form}>
-                <form 
+            <Form {...form}>
+                <form
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="space-y-6"
                 >
@@ -75,36 +76,32 @@ export const LoginForm = () => {
                             name="email"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>
-                                        Email
-                                    </FormLabel>
+                                    <FormLabel>Email</FormLabel>
                                     <FormControl>
                                         <Input
                                             className="focus:ring-offset-0 focus:ring-none focus:outline-none  "
                                             {...field}
                                             disabled={isPending}
                                             placeholder="enter your email"
-                                            type="email" 
+                                            type="email"
                                         />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
-                            )} 
+                            )}
                         />
                         <FormField
                             control={form.control}
                             name="password"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>
-                                        Password
-                                    </FormLabel>
+                                    <FormLabel>Password</FormLabel>
                                     <FormControl>
                                         <Input
                                             {...field}
                                             disabled={isPending}
                                             placeholder="******"
-                                            type="password" 
+                                            type="password"
                                         />
                                     </FormControl>
                                     <Button
@@ -119,7 +116,7 @@ export const LoginForm = () => {
                                     </Button>
                                     <FormMessage />
                                 </FormItem>
-                            )} 
+                            )}
                         />
                     </div>
                     <FormError message={error || urlError} />
@@ -130,10 +127,12 @@ export const LoginForm = () => {
                         type="submit"
                     >
                         Login
-                        {isLoading && <Loader className="w-4 h-4 ml-2 animate-spin" />}
+                        {isLoading && (
+                            <Loader className="w-4 h-4 ml-2 animate-spin" />
+                        )}
                     </Button>
                 </form>
             </Form>
         </CardWrapper>
-    )
-}
+    );
+};

@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Modal from "@/components/Modal";
-import Input from '@/components/Inputs/Input';
+import Input from "@/components/Inputs/Input";
 import { CldUploadButton } from "next-cloudinary";
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
@@ -18,7 +18,7 @@ type SafeUser = Omit<User, "name" | "email" | "image"> & {
     name: string | null;
     email: string | null;
     image: string | null;
-}
+};
 
 interface SettingsModalProps {
     isOpen?: boolean;
@@ -32,36 +32,46 @@ interface CloudinaryUploadWidgetResults {
     };
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentUser }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({
+    isOpen,
+    onClose,
+    currentUser,
+}) => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
 
-    const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<FieldValues>({
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        watch,
+        formState: { errors },
+    } = useForm<FieldValues>({
         defaultValues: {
-            name: currentUser?.name || '',
-            image: currentUser?.image || '',
-        }
+            name: currentUser?.name || "",
+            image: currentUser?.image || "",
+        },
     });
 
-    const image = watch('image');
+    const image = watch("image");
 
     const handleUpload = (result: CloudinaryUploadWidgetResults) => {
         if (result?.info?.secure_url) {
-            setValue('image', result.info.secure_url, {
-                shouldValidate: true
+            setValue("image", result.info.secure_url, {
+                shouldValidate: true,
             });
         }
-    }
+    };
 
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         setIsLoading(true);
 
         const updatedData: { name?: string; image?: string } = {};
-        
+
         if (data.name && data.name !== currentUser?.name) {
             updatedData.name = data.name;
         }
-        
+
         if (data.image && data.image !== currentUser?.image) {
             updatedData.image = data.image;
         }
@@ -72,7 +82,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
             return;
         }
 
-        axios.post('/api/settings/', updatedData)
+        axios
+            .post("/api/settings/", updatedData)
             .then(() => {
                 router.refresh();
                 window.location.reload();
@@ -80,7 +91,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
             })
             .catch(() => toast.error("Something went wrong"))
             .finally(() => setIsLoading(false));
-    }
+    };
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -108,7 +119,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
                                 transition={{ delay: 0.2 }}
                                 className="text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6"
                             >
-                                Customize your profile to make it uniquely yours.
+                                Customize your profile to make it uniquely
+                                yours.
                             </motion.p>
                             <form onSubmit={handleSubmit(onSubmit)}>
                                 <div className="space-y-5 sm:space-y-6">
@@ -121,20 +133,32 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
                                         <div className="relative w-20 h-20 sm:w-32 sm:h-32">
                                             <Avatar className="w-full h-full ring-2 sm:ring-4 ring-purple-400">
                                                 <AvatarImage
-                                                    src={image || currentUser?.image || "/placeholder.svg"}
+                                                    src={
+                                                        image ||
+                                                        currentUser?.image ||
+                                                        "/placeholder.svg"
+                                                    }
                                                     alt="Profile"
                                                     className="object-cover"
                                                 />
                                                 <AvatarFallback className="text-xl sm:text-4xl bg-gradient-to-br from-purple-400 to-purple-600 text-white">
-                                                    {currentUser?.name?.[0]?.toUpperCase() || 'U'}
+                                                    {currentUser?.name?.[0]?.toUpperCase() ||
+                                                        "U"}
                                                 </AvatarFallback>
                                             </Avatar>
                                         </div>
                                         <CldUploadButton
                                             options={{ maxFiles: 1 }}
                                             onSuccess={(result) => {
-                                                if (result?.info && typeof result.info === 'object' && 'secure_url' in result.info) {
-                                                    handleUpload(result as CloudinaryUploadWidgetResults);
+                                                if (
+                                                    result?.info &&
+                                                    typeof result.info ===
+                                                        "object" &&
+                                                    "secure_url" in result.info
+                                                ) {
+                                                    handleUpload(
+                                                        result as CloudinaryUploadWidgetResults,
+                                                    );
                                                 }
                                             }}
                                             uploadPreset="ymwmaq0t"
@@ -155,7 +179,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, currentU
                                         transition={{ delay: 0.4 }}
                                         className="space-y-2"
                                     >
-                                        <Label htmlFor="name" className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        <Label
+                                            htmlFor="name"
+                                            className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300"
+                                        >
                                             Username
                                         </Label>
                                         <Input

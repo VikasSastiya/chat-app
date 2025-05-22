@@ -6,11 +6,11 @@ import { Provider } from "react-redux";
 import { store } from "@/store/store";
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <ThemeProvider attribute="class" defaultTheme="light">
-      <Provider store={store}>
-        <SessionProvider>{children}</SessionProvider>
-      </Provider>
-    </ThemeProvider>
-  );
+    return (
+        <ThemeProvider attribute="class" defaultTheme="light">
+            <Provider store={store}>
+                <SessionProvider>{children}</SessionProvider>
+            </Provider>
+        </ThemeProvider>
+    );
 };

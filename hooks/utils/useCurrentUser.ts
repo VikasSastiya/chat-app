@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { User } from "@prisma/client";
 import { useEffect, useState } from "react";
@@ -17,11 +17,11 @@ const useCurrentUser = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await fetch('/api/current-user');
+                const response = await fetch("/api/current-user");
                 const data = await response.json();
                 setUser(data as SafeUser);
             } catch (error) {
-                console.error('Error fetching user:', error);
+                console.error("Error fetching user:", error);
             } finally {
                 setIsLoading(false);
             }

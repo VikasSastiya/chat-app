@@ -1,25 +1,27 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { FullConversationType } from '@/types';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { FullConversationType } from "@/types";
 
 export const useConversations = () => {
-  const [conversations, setConversations] = useState<FullConversationType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+    const [conversations, setConversations] = useState<FullConversationType[]>(
+        [],
+    );
+    const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchConversations = async () => {
-      try {
-        const response = await axios.get('/api/conversations');
-        setConversations(response.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Failed to fetch conversations', error);
-        setIsLoading(false);
-      }
-    };
+    useEffect(() => {
+        const fetchConversations = async () => {
+            try {
+                const response = await axios.get("/api/conversations");
+                setConversations(response.data);
+                setIsLoading(false);
+            } catch (error) {
+                console.error("Failed to fetch conversations", error);
+                setIsLoading(false);
+            }
+        };
 
-    fetchConversations();
-  }, []);
+        fetchConversations();
+    }, []);
 
-  return { conversations, isLoading };
+    return { conversations, isLoading };
 };

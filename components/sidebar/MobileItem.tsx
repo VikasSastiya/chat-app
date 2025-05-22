@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Link from "next/link";
 import clsx from "clsx";
@@ -19,7 +19,7 @@ const MobileItem: React.FC<MobileItemProps> = ({
     icon: Icon,
     active,
     onClick,
-    notificationCount = 0
+    notificationCount = 0,
 }) => {
     const handleClick = () => {
         if (onClick) {
@@ -28,10 +28,11 @@ const MobileItem: React.FC<MobileItemProps> = ({
     };
 
     return (
-        <Link 
+        <Link
             href={href}
             onClick={handleClick}
-            className={clsx(`
+            className={clsx(
+                `
                 group 
                 flex 
                 gap-x-3 
@@ -46,21 +47,20 @@ const MobileItem: React.FC<MobileItemProps> = ({
                 hover:bg-gray-100
                 dark:hover:bg-gray-800
             `,
-                active && "bg-gray-100 dark:bg-gray-800 text-black dark:text-gray-100",
+                active &&
+                    "bg-gray-100 dark:bg-gray-800 text-black dark:text-gray-100",
             )}
         >
             <div className="relative">
                 <Icon className="h-6 w-6" />
                 {notificationCount > 0 && (
-                    <Badge 
-                        className="absolute -top-2 -right-2 h-4 w-4 rounded-full p-0 flex items-center justify-center bg-purple-500 text-[10px]"
-                    >
+                    <Badge className="absolute -top-2 -right-2 h-4 w-4 rounded-full p-0 flex items-center justify-center bg-purple-500 text-[10px]">
                         {notificationCount}
                     </Badge>
                 )}
             </div>
         </Link>
     );
-}
+};
 
 export default MobileItem;

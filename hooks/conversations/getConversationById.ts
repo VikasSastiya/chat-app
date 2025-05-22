@@ -11,17 +11,17 @@ const getConversationById = async (conversationId: string) => {
 
         const conversation = await db.conversation.findUnique({
             where: {
-                id: conversationId
+                id: conversationId,
             },
             include: {
-                users: true
-            }
+                users: true,
+            },
         });
 
         return conversation;
     } catch (error: any) {
         return null;
     }
-}
+};
 
-export default getConversationById
+export default getConversationById;

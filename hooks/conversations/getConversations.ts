@@ -11,29 +11,29 @@ const getConversations = async () => {
     try {
         const conversations = await db.conversation.findMany({
             orderBy: {
-                lastMessageAt: 'desc'
+                lastMessageAt: "desc",
             },
             where: {
                 users: {
                     some: {
-                        id: currentUser.id
-                    }
-                }
+                        id: currentUser.id,
+                    },
+                },
             },
             include: {
                 users: true,
                 messages: {
                     include: {
                         sender: true,
-                        seenBy: true
-                    }
-                }
-            }
+                        seenBy: true,
+                    },
+                },
+            },
         });
 
-        return conversations.map(conversation => ({
+        return conversations.map((conversation) => ({
             ...conversation,
-            isGroup: !!conversation.isGroup  // Convert null/undefined to false
+            isGroup: !!conversation.isGroup, // Convert null/undefined to false
         }));
     } catch (error: any) {
         return [];

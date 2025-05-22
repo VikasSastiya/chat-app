@@ -1,8 +1,8 @@
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
 const usePathname = () => {
-  const { pathname } = useRouter();
-  return pathname;
+    const { pathname } = useRouter();
+    return pathname;
 };
 
 export default usePathname;

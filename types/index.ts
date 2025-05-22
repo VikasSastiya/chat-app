@@ -17,7 +17,7 @@ export interface User {
 export type FullMessageType = Message & {
     sender: PrismaUser;
     seenBy: PrismaUser[];
-}
+};
 
 // Enhanced Conversation type with group chat properties
 export type FullConversationType = Conversation & {
@@ -27,7 +27,7 @@ export type FullConversationType = Conversation & {
     groupAdmin?: string; // ID of the user who created the group
     groupName?: string; // Name of the group chat
     groupImage?: string; // Group avatar image
-}
+};
 
 // Cloudinary image upload result type
 export interface CloudinaryResult {

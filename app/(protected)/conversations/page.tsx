@@ -24,6 +24,6 @@ const DashboardPage = async () => {
             </div>
         </>
     );
-}
+};
 
 export default DashboardPage;

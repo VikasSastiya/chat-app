@@ -21,9 +21,7 @@
   <img src="https://github.com/ShaileshIshere.png" width="50px" alt="Shilesh" style="border-radius:50%" />
 </a>
 
-  
-![Repo Stats](https://repobeats.axiom.co/api/embed/f2426b81a1794f1484923e6f0bc56260824c0ea7.svg "Repobeats analytics image")
-
+![Alt](https://repobeats.axiom.co/api/embed/db0943b5106580e55dedcadc7210edb1483b0f4d.svg "Repobeats analytics image")
 
 ## ✨ Overview
 
@@ -70,7 +68,6 @@ Screenshot:
 - Node.js (v16+)
 - PostgreSQL
 - Git
-
 
 ## 📝 License
 

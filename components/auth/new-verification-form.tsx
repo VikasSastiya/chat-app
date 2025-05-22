@@ -16,11 +16,10 @@ export const NewVerificationForm = () => {
     const [success, setSuccess] = useState<string | undefined>();
 
     const onSubmit = useCallback(() => {
-        if(success || error)
-            return;
-        if(!token) {
+        if (success || error) return;
+        if (!token) {
             setError("Missing Token!");
-            return
+            return;
         }
         newVerification(token)
             .then((data) => {
@@ -28,8 +27,8 @@ export const NewVerificationForm = () => {
                 setError(data.error);
             })
             .catch(() => {
-                setError("Something went wrong!")
-            })
+                setError("Something went wrong!");
+            });
         console.log(token);
     }, [token, success, error]);
 
@@ -49,14 +48,10 @@ export const NewVerificationForm = () => {
                 {/* <BarLoader /> */}
                 {/* <PropagateLoader /> */}
                 {/* <PacmanLoader /> */}
-                {!success && !error && (
-                    <RingLoader size={50}/>
-                )}
+                {!success && !error && <RingLoader size={50} />}
                 <FormSuccess message={success} />
-                {!success && (
-                    <FormError message={error} />
-                )}
+                {!success && <FormError message={error} />}
             </div>
         </CardWrapper>
     );
-} 
+};

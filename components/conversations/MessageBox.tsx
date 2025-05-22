@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { FullMessageType } from "@/types";
 import { useSession } from "next-auth/react";
 import clsx from "clsx";
@@ -11,15 +11,15 @@ import ImageModal from "@/components/conversations/ImageModal";
 import { motion } from "framer-motion";
 
 interface MessageBoxProps {
-    data: FullMessageType,
-    isLast?: boolean,
-    previousMessage?: FullMessageType | null
+    data: FullMessageType;
+    isLast?: boolean;
+    previousMessage?: FullMessageType | null;
 }
 
 export default function MessageBox({
-    data, 
+    data,
     isLast,
-    previousMessage
+    previousMessage,
 }: MessageBoxProps) {
     const session = useSession();
     const [imageModalOpen, setImageModalOpen] = useState(false);
@@ -28,11 +28,11 @@ export default function MessageBox({
     const seenList = (data.seenBy || [])
         .filter((user) => user.email !== data?.sender?.email)
         .map((user) => user.name)
-        .join(', ');
+        .join(", ");
 
     const sender = {
         ...data.sender,
-        image: data.sender?.image || '/profile-pic.jpg'
+        image: data.sender?.image || "/profile-pic.jpg",
     };
 
     const container = "flex gap-3 py-[2px] px-2"; // Minimal vertical padding
@@ -44,7 +44,7 @@ export default function MessageBox({
     const message = clsx(
         "text-sm w-fit overflow-hidden relative",
         isOwn ? "bg-purple-600 text-white" : "bg-gray-100 dark:bg-gray-900",
-        data.image ? "rounded-lg p-0" : "rounded-lg py-1.5 px-3 pb-5" // More rectangular with slight rounded corners
+        data.image ? "rounded-lg p-0" : "rounded-lg py-1.5 px-3 pb-5", // More rectangular with slight rounded corners
     );
 
     const getDisplayDate = (date: Date) => {
@@ -53,19 +53,24 @@ export default function MessageBox({
         } else if (isYesterday(date)) {
             return "Yesterday";
         } else {
-            return format(date, 'dd MMMM yyyy');
+            return format(date, "dd MMMM yyyy");
         }
     };
 
     const currentMessageDate = new Date(data.createdAt);
     const displayDate = getDisplayDate(currentMessageDate);
 
-    const showDatePartition = previousMessage && 
+    const showDatePartition =
+        previousMessage &&
         getDisplayDate(new Date(previousMessage.createdAt)) !== displayDate;
 
-    const showAvatar = !previousMessage || 
+    const showAvatar =
+        !previousMessage ||
         previousMessage.sender.email !== data.sender.email ||
-        differenceInMinutes(currentMessageDate, new Date(previousMessage.createdAt)) >= 1;
+        differenceInMinutes(
+            currentMessageDate,
+            new Date(previousMessage.createdAt),
+        ) >= 1;
 
     return (
         <div className={`${container}`}>
@@ -80,25 +85,25 @@ export default function MessageBox({
                 </div>
             )}
             <div className={clsx(avatar, !showAvatar && "invisible")}>
-                <Avatar 
-                    user={sender}
-                    size="medium"
-                />
+                <Avatar user={sender} size="medium" />
             </div>
-            <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className={`${body} `}>
-                <div className={clsx(message, "relative min-w-[60px]")}> {/* Added min-width for short messages */}
-                    <ImageModal 
-                        isOpen={imageModalOpen} 
-                        src={data.image} 
-                        alt="Image" 
-                        onClose={() => setImageModalOpen(false)} 
+            <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className={`${body} `}
+            >
+                <div className={clsx(message, "relative min-w-[60px]")}>
+                    {" "}
+                    {/* Added min-width for short messages */}
+                    <ImageModal
+                        isOpen={imageModalOpen}
+                        src={data.image}
+                        alt="Image"
+                        onClose={() => setImageModalOpen(false)}
                     />
                     {data.image ? (
-                        <Image 
+                        <Image
                             onClick={() => setImageModalOpen(true)}
                             src={data.image}
                             alt="Image"
@@ -110,7 +115,7 @@ export default function MessageBox({
                         <div className="pr-12">{data.body}</div>
                     )}
                     <div className="absolute bottom-1 right-2 text-[11px] opacity-60">
-                        {format(currentMessageDate, 'HH:mm')}
+                        {format(currentMessageDate, "HH:mm")}
                     </div>
                 </div>
                 {isLast && isOwn && seenList.length > 0 && (

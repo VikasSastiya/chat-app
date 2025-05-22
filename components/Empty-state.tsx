@@ -8,6 +8,6 @@ const EmptyState = () => {
             </div>
         </div>
     );
-}
+};
 
 export default EmptyState;

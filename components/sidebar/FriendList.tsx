@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from "react";
 import UserBox from "./UserBox";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
@@ -8,347 +8,394 @@ import { MdOutlineGroupAdd } from "react-icons/md";
 import useConversation from "@/hooks/conversations/useCurrentConversation";
 import clsx from "clsx";
 import { FullConversationType, FullMessageType } from "@/types";
-import useFriends from '@/hooks/users/useFriend';
-import { UserBoxSkeleton } from './UserBoxSkeleton';
-import GroupChatModal from '@/components/sidebar/GroupChatModal';
-import { useSession } from 'next-auth/react';
-import { pusherClient } from '@/lib/pusher';
-import { find } from 'lodash';
-import { useRouter } from 'next/navigation';
-import ThemeSwitch from '@/components/ThemeSwitch';
-import NProgress from 'nprogress';
+import useFriends from "@/hooks/users/useFriend";
+import { UserBoxSkeleton } from "./UserBoxSkeleton";
+import GroupChatModal from "@/components/sidebar/GroupChatModal";
+import { useSession } from "next-auth/react";
+import { pusherClient } from "@/lib/pusher";
+import { find } from "lodash";
+import { useRouter } from "next/navigation";
+import ThemeSwitch from "@/components/ThemeSwitch";
+import NProgress from "nprogress";
 
 interface FriendListProps {
-  conversations: FullConversationType[];
+    conversations: FullConversationType[];
 }
 
 interface GroupType extends FullConversationType {
-  updatedAt?: Date;
+    updatedAt?: Date;
 }
 
-export default function FriendList({ conversations: initialConversations }: FriendListProps) {
-  const [conversations, setConversations] = useState<FullConversationType[]>(initialConversations);
-  const [searchTerm, setSearchTerm] = useState('');
-  const { isOpen, conversationId } = useConversation();
-  const { friends, isLoading } = useFriends();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const session = useSession();
-  const router = useRouter();
-  
-  const pusherKey = session.data?.user?.email;
-  
-  // Configure NProgress once when component mounts
-  useEffect(() => {
-    NProgress.configure({ 
-      minimum: 0.3,
-      easing: 'ease',
-      speed: 400,
-      trickleSpeed: 80,
-      showSpinner: false,
-    });
-  }, []);
-  // Handle route changes to complete the loader
-  useEffect(() => {
-    const handleRouteChange = () => {
-      NProgress.done();
-    };
+export default function FriendList({
+    conversations: initialConversations,
+}: FriendListProps) {
+    const [conversations, setConversations] =
+        useState<FullConversationType[]>(initialConversations);
+    const [searchTerm, setSearchTerm] = useState("");
+    const { isOpen, conversationId } = useConversation();
+    const { friends, isLoading } = useFriends();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const session = useSession();
+    const router = useRouter();
 
-    const handleRouteChangeError = () => {
-      NProgress.done();
-    };
+    const pusherKey = session.data?.user?.email;
 
-    // Use Next.js 13+ App Router navigation events
-    const unsubscribe = () => {
-      document.removeEventListener('routeChangeStart', handleRouteChange);
-      document.removeEventListener('routeChangeComplete', handleRouteChange);
-      document.removeEventListener('routeChangeError', handleRouteChangeError);
-    };
+    // Configure NProgress once when component mounts
+    useEffect(() => {
+        NProgress.configure({
+            minimum: 0.3,
+            easing: "ease",
+            speed: 400,
+            trickleSpeed: 80,
+            showSpinner: false,
+        });
+    }, []);
+    // Handle route changes to complete the loader
+    useEffect(() => {
+        const handleRouteChange = () => {
+            NProgress.done();
+        };
 
-    document.addEventListener('routeChangeStart', handleRouteChange);
-    document.addEventListener('routeChangeComplete', handleRouteChange);
-    document.addEventListener('routeChangeError', handleRouteChangeError);
+        const handleRouteChangeError = () => {
+            NProgress.done();
+        };
 
-    return unsubscribe;
-  }, []);
+        // Use Next.js 13+ App Router navigation events
+        const unsubscribe = () => {
+            document.removeEventListener("routeChangeStart", handleRouteChange);
+            document.removeEventListener(
+                "routeChangeComplete",
+                handleRouteChange,
+            );
+            document.removeEventListener(
+                "routeChangeError",
+                handleRouteChangeError,
+            );
+        };
 
-  useEffect(() => {
-    if (!pusherKey) return;
+        document.addEventListener("routeChangeStart", handleRouteChange);
+        document.addEventListener("routeChangeComplete", handleRouteChange);
+        document.addEventListener("routeChangeError", handleRouteChangeError);
 
-    // Subscribe to user's personal channel
-    pusherClient.subscribe(pusherKey);
+        return unsubscribe;
+    }, []);
 
-    // Subscribe to all conversation channels
-    conversations.forEach((conversation) => {
-      pusherClient.subscribe(conversation.id);
-    });
+    useEffect(() => {
+        if (!pusherKey) return;
 
-    const messageHandler = (message: FullMessageType) => {
-      setConversations((current) => current.map((currentConversation) => {
-        if (currentConversation.id === message.conversationId) {
-          return {
-            ...currentConversation,
-            messages: [...(currentConversation.messages || []), message],
-            lastMessageAt: new Date(message.createdAt)
-          };
-        }
-        return currentConversation;
-      }));
-    };
+        // Subscribe to user's personal channel
+        pusherClient.subscribe(pusherKey);
 
-    const updateHandler = (data: { id: string, messages?: FullMessageType[] }) => {
-      setConversations((current) => current.map((currentConversation) => {
-        if (currentConversation.id === data.id) {
-          return {
-            ...currentConversation,
-            messages: data.messages || currentConversation.messages || [],
-            lastMessageAt: data.messages?.length 
-              ? new Date(data.messages[data.messages.length - 1].createdAt)
-              : currentConversation.lastMessageAt
-          };
-        }
-        return currentConversation;
-      }));
-    };
+        // Subscribe to all conversation channels
+        conversations.forEach((conversation) => {
+            pusherClient.subscribe(conversation.id);
+        });
 
-    const newConversationHandler = (conversation: FullConversationType) => {
-      setConversations((current) => {
-        if (find(current, { id: conversation.id })) {
-          return current;
-        }
-        // Subscribe to new conversation channel
-        pusherClient.subscribe(conversation.id);
-        return [conversation, ...current];
-      });
-    };
+        const messageHandler = (message: FullMessageType) => {
+            setConversations((current) =>
+                current.map((currentConversation) => {
+                    if (currentConversation.id === message.conversationId) {
+                        return {
+                            ...currentConversation,
+                            messages: [
+                                ...(currentConversation.messages || []),
+                                message,
+                            ],
+                            lastMessageAt: new Date(message.createdAt),
+                        };
+                    }
+                    return currentConversation;
+                }),
+            );
+        };
 
-    const removeHandler = (conversation: FullConversationType) => {
-      setConversations((current) => {
-        return [...current].filter((currentConversation) => 
-          currentConversation.id !== conversation.id);
-      });
-      
-      if (conversationId === conversation.id) {
-        router.push("/conversations");
-      }
-    };
+        const updateHandler = (data: {
+            id: string;
+            messages?: FullMessageType[];
+        }) => {
+            setConversations((current) =>
+                current.map((currentConversation) => {
+                    if (currentConversation.id === data.id) {
+                        return {
+                            ...currentConversation,
+                            messages:
+                                data.messages ||
+                                currentConversation.messages ||
+                                [],
+                            lastMessageAt: data.messages?.length
+                                ? new Date(
+                                      data.messages[
+                                          data.messages.length - 1
+                                      ].createdAt,
+                                  )
+                                : currentConversation.lastMessageAt,
+                        };
+                    }
+                    return currentConversation;
+                }),
+            );
+        };
 
-    // Bind events
-    pusherClient.bind('messages:new', messageHandler);
-    pusherClient.bind('conversation:new', newConversationHandler);
-    pusherClient.bind('conversation:update', updateHandler);
-    pusherClient.bind('conversation:remove', removeHandler);
+        const newConversationHandler = (conversation: FullConversationType) => {
+            setConversations((current) => {
+                if (find(current, { id: conversation.id })) {
+                    return current;
+                }
+                // Subscribe to new conversation channel
+                pusherClient.subscribe(conversation.id);
+                return [conversation, ...current];
+            });
+        };
 
-    return () => {
-      // Cleanup subscriptions
-      pusherClient.unsubscribe(pusherKey);
-      conversations.forEach((conversation) => {
-        pusherClient.unsubscribe(conversation.id);
-      });
+        const removeHandler = (conversation: FullConversationType) => {
+            setConversations((current) => {
+                return [...current].filter(
+                    (currentConversation) =>
+                        currentConversation.id !== conversation.id,
+                );
+            });
 
-      // Cleanup event bindings
-      pusherClient.unbind('messages:new', messageHandler);
-      pusherClient.unbind('conversation:new', newConversationHandler);
-      pusherClient.unbind('conversation:update', updateHandler);
-      pusherClient.unbind('conversation:remove', removeHandler);
-    };
-  }, [pusherKey, conversations, router, conversationId]);
+            if (conversationId === conversation.id) {
+                router.push("/conversations");
+            }
+        };
 
-  // Update conversations when initialConversations prop changes
-  useEffect(() => {
-    setConversations(initialConversations);
-  }, [initialConversations]);
+        // Bind events
+        pusherClient.bind("messages:new", messageHandler);
+        pusherClient.bind("conversation:new", newConversationHandler);
+        pusherClient.bind("conversation:update", updateHandler);
+        pusherClient.bind("conversation:remove", removeHandler);
 
-  // Memoized groups and direct messages with sorting
-  const { directMessages, groups } = useMemo(() => {
-    const sortedConversations = [...conversations].sort((a, b) => {
-      const dateA = a.lastMessageAt ? new Date(a.lastMessageAt) : new Date(a.createdAt);
-      const dateB = b.lastMessageAt ? new Date(b.lastMessageAt) : new Date(b.createdAt);
-      return dateB.getTime() - dateA.getTime();
-    });
+        return () => {
+            // Cleanup subscriptions
+            pusherClient.unsubscribe(pusherKey);
+            conversations.forEach((conversation) => {
+                pusherClient.unsubscribe(conversation.id);
+            });
 
-    return {
-      groups: sortedConversations.filter(conv => conv.isGroup),
-      directMessages: sortedConversations.filter(conv => !conv.isGroup)
-    };
-  }, [conversations]);
+            // Cleanup event bindings
+            pusherClient.unbind("messages:new", messageHandler);
+            pusherClient.unbind("conversation:new", newConversationHandler);
+            pusherClient.unbind("conversation:update", updateHandler);
+            pusherClient.unbind("conversation:remove", removeHandler);
+        };
+    }, [pusherKey, conversations, router, conversationId]);
 
-  const sortedFriends = useMemo(() => {
-    return [...friends].sort((friendA, friendB) => {
-      const conversationA = directMessages.find(conv => 
-        conv.users.some(user => user.id === friendA.id)
-      );
-      
-      const conversationB = directMessages.find(conv => 
-        conv.users.some(user => user.id === friendB.id)
-      );
+    // Update conversations when initialConversations prop changes
+    useEffect(() => {
+        setConversations(initialConversations);
+    }, [initialConversations]);
 
-      const timeA = conversationA?.lastMessageAt || 
-                    conversationA?.createdAt || 
-                    new Date(0);
-      const timeB = conversationB?.lastMessageAt || 
-                    conversationB?.createdAt || 
-                    new Date(0);
+    // Memoized groups and direct messages with sorting
+    const { directMessages, groups } = useMemo(() => {
+        const sortedConversations = [...conversations].sort((a, b) => {
+            const dateA = a.lastMessageAt
+                ? new Date(a.lastMessageAt)
+                : new Date(a.createdAt);
+            const dateB = b.lastMessageAt
+                ? new Date(b.lastMessageAt)
+                : new Date(b.createdAt);
+            return dateB.getTime() - dateA.getTime();
+        });
 
-      return new Date(timeB).getTime() - new Date(timeA).getTime();
-    });
-  }, [friends, directMessages]);
+        return {
+            groups: sortedConversations.filter((conv) => conv.isGroup),
+            directMessages: sortedConversations.filter((conv) => !conv.isGroup),
+        };
+    }, [conversations]);
 
-  const filteredItems = useMemo(() => {
-    const searchLower = searchTerm.toLowerCase();
-    
-    const filteredFriends = sortedFriends.filter(friend => 
-      friend.name?.toLowerCase().includes(searchLower) ||
-      friend.email?.toLowerCase().includes(searchLower)
-    );
+    const sortedFriends = useMemo(() => {
+        return [...friends].sort((friendA, friendB) => {
+            const conversationA = directMessages.find((conv) =>
+                conv.users.some((user) => user.id === friendA.id),
+            );
 
-    const filteredGroups = groups.filter(group => 
-      group.name?.toLowerCase().includes(searchLower)
-    );
+            const conversationB = directMessages.find((conv) =>
+                conv.users.some((user) => user.id === friendB.id),
+            );
 
-    return { filteredFriends, filteredGroups };
-  }, [sortedFriends, groups, searchTerm]);
+            const timeA =
+                conversationA?.lastMessageAt ||
+                conversationA?.createdAt ||
+                new Date(0);
+            const timeB =
+                conversationB?.lastMessageAt ||
+                conversationB?.createdAt ||
+                new Date(0);
 
-  if (isLoading) {
-    return (
-      <aside className="fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80 lg:block overflow-y-auto border-r border-gray-200 block w-full left-0">
-        <div className="px-5 mt-16">
-          {[...Array(5)].map((_, i) => (
-            <UserBoxSkeleton key={i} />
-          ))}
-        </div>
-      </aside>
-    );
-  }
+            return new Date(timeB).getTime() - new Date(timeA).getTime();
+        });
+    }, [friends, directMessages]);
 
-  return (
-    <>
-      <GroupChatModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        users={friends}
-      />
-      <aside className={clsx(
-        "fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80 lg:block overflow-y-auto border-r",
-        "bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800",
-        "transition-all duration-300 ease-in-out",
-        isOpen ? "hidden" : "block w-full left-0",
-        "scrollbar-thin scrollbar-thumb-rounded-full",
-        "scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600",
-        "scrollbar-track-transparent hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-500",
-        "pr-0.5"
-      )}>
-        <div className="px-5 w-full">
-          {/* Search and Header Section */}
-          <div className="sticky top-0 pt-4 pb-2 bg-white dark:bg-gray-900 z-10">
-            <div className="relative flex items-center mb-4">
-              <div className="absolute left-3 flex items-center pointer-events-none">
-                <Search className="text-gray-400 dark:text-gray-500" size={20} />
-              </div>
-              <Input 
-                placeholder="Search conversations..." 
-                className="pl-10 h-10 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
+    const filteredItems = useMemo(() => {
+        const searchLower = searchTerm.toLowerCase();
 
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center space-x-3">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                  Conversations
-                </h2>
-                <span className="px-2.5 py-0.5 rounded-full text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
-                  {filteredItems.filteredFriends.length + filteredItems.filteredGroups.length}
-                </span>
-              </div>
+        const filteredFriends = sortedFriends.filter(
+            (friend) =>
+                friend.name?.toLowerCase().includes(searchLower) ||
+                friend.email?.toLowerCase().includes(searchLower),
+        );
 
-              {/* Theme Switch - Mobile Only */}
-              <div className="lg:hidden flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <ThemeSwitch />
-                  <button
-                    onClick={() => setIsModalOpen(true)} 
-                    className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition"
-                  >
-                    <MdOutlineGroupAdd className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                  </button>
+        const filteredGroups = groups.filter((group) =>
+            group.name?.toLowerCase().includes(searchLower),
+        );
+
+        return { filteredFriends, filteredGroups };
+    }, [sortedFriends, groups, searchTerm]);
+
+    if (isLoading) {
+        return (
+            <aside className="fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80 lg:block overflow-y-auto border-r border-gray-200 block w-full left-0">
+                <div className="px-5 mt-16">
+                    {[...Array(5)].map((_, i) => (
+                        <UserBoxSkeleton key={i} />
+                    ))}
                 </div>
-              </div>
+            </aside>
+        );
+    }
 
-              {/* Group Button - Desktop Only */}
-              <div className="hidden lg:block">
-                <button
-                  onClick={() => setIsModalOpen(true)} 
-                  className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition"
-                >
-                  <MdOutlineGroupAdd className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                </button>
-              </div>
-            </div>
-          </div>
+    return (
+        <>
+            <GroupChatModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                users={friends}
+            />
+            <aside
+                className={clsx(
+                    "fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80 lg:block overflow-y-auto border-r",
+                    "bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800",
+                    "transition-all duration-300 ease-in-out",
+                    isOpen ? "hidden" : "block w-full left-0",
+                    "scrollbar-thin scrollbar-thumb-rounded-full",
+                    "scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600",
+                    "scrollbar-track-transparent hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-500",
+                    "pr-0.5",
+                )}
+            >
+                <div className="px-5 w-full">
+                    {/* Search and Header Section */}
+                    <div className="sticky top-0 pt-4 pb-2 bg-white dark:bg-gray-900 z-10">
+                        <div className="relative flex items-center mb-4">
+                            <div className="absolute left-3 flex items-center pointer-events-none">
+                                <Search
+                                    className="text-gray-400 dark:text-gray-500"
+                                    size={20}
+                                />
+                            </div>
+                            <Input
+                                placeholder="Search conversations..."
+                                className="pl-10 h-10 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
 
-          {/* Groups Section */}
-          {filteredItems.filteredGroups.length > 0 && (
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-                Groups
-              </h3>
-              <nav className="space-y-2">
-                {filteredItems.filteredGroups.map((group) => (
-                  <UserBox 
-                    key={group.id} 
-                    data={{ ...group, isGroup: true, updatedAt: (group as GroupType).updatedAt || new Date() }}
-                    conversations={conversations}
-                    selected={false}
-                  />
-                ))}
-              </nav>
-            </div>
-          )}
+                        <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center space-x-3">
+                                <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+                                    Conversations
+                                </h2>
+                                <span className="px-2.5 py-0.5 rounded-full text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+                                    {filteredItems.filteredFriends.length +
+                                        filteredItems.filteredGroups.length}
+                                </span>
+                            </div>
 
-          {/* Direct Messages Section */}
-          <div>
-            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-              Direct Messages
-            </h3>
-            {filteredItems.filteredFriends.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <p className="text-gray-500 dark:text-gray-400 mb-2">
-                  No conversations found
-                </p>
-                <p className="text-sm text-gray-400 dark:text-gray-500">
-                  Try a different search term
-                </p>
-              </div>
-            ) : (
-              <nav className="space-y-2 pb-6">
-                {filteredItems.filteredFriends.map((friend) => (
-                  <UserBox 
-                    key={friend.id} 
-                    data={friend} 
-                    conversations={conversations}
-                    selected={false}
-                  />
-                ))}
-              </nav>
-            )}
-          </div>
-        </div>
-      </aside>
-      <style jsx global>{`
-        .scrollbar-thin::-webkit-scrollbar {
-          width: 4px;
-        }
-        
-        .scrollbar-thin::-webkit-scrollbar-thumb {
-          border-radius: 9999px;
-        }
+                            {/* Theme Switch - Mobile Only */}
+                            <div className="lg:hidden flex items-center justify-between">
+                                <div className="flex items-center space-x-2">
+                                    <ThemeSwitch />
+                                    <button
+                                        onClick={() => setIsModalOpen(true)}
+                                        className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition"
+                                    >
+                                        <MdOutlineGroupAdd className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                                    </button>
+                                </div>
+                            </div>
 
-        /* Ensure content doesn't shrink when scrollbar appears */
-        .scrollbar-thin {
-          scrollbar-gutter: stable;
-        }
-      `}</style>
-    </>
-  );
+                            {/* Group Button - Desktop Only */}
+                            <div className="hidden lg:block">
+                                <button
+                                    onClick={() => setIsModalOpen(true)}
+                                    className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition"
+                                >
+                                    <MdOutlineGroupAdd className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Groups Section */}
+                    {filteredItems.filteredGroups.length > 0 && (
+                        <div className="mb-6">
+                            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+                                Groups
+                            </h3>
+                            <nav className="space-y-2">
+                                {filteredItems.filteredGroups.map((group) => (
+                                    <UserBox
+                                        key={group.id}
+                                        data={{
+                                            ...group,
+                                            isGroup: true,
+                                            updatedAt:
+                                                (group as GroupType)
+                                                    .updatedAt || new Date(),
+                                        }}
+                                        conversations={conversations}
+                                        selected={false}
+                                    />
+                                ))}
+                            </nav>
+                        </div>
+                    )}
+
+                    {/* Direct Messages Section */}
+                    <div>
+                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+                            Direct Messages
+                        </h3>
+                        {filteredItems.filteredFriends.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center py-12 text-center">
+                                <p className="text-gray-500 dark:text-gray-400 mb-2">
+                                    No conversations found
+                                </p>
+                                <p className="text-sm text-gray-400 dark:text-gray-500">
+                                    Try a different search term
+                                </p>
+                            </div>
+                        ) : (
+                            <nav className="space-y-2 pb-6">
+                                {filteredItems.filteredFriends.map((friend) => (
+                                    <UserBox
+                                        key={friend.id}
+                                        data={friend}
+                                        conversations={conversations}
+                                        selected={false}
+                                    />
+                                ))}
+                            </nav>
+                        )}
+                    </div>
+                </div>
+            </aside>
+            <style jsx global>{`
+                .scrollbar-thin::-webkit-scrollbar {
+                    width: 4px;
+                }
+
+                .scrollbar-thin::-webkit-scrollbar-thumb {
+                    border-radius: 9999px;
+                }
+
+                /* Ensure content doesn't shrink when scrollbar appears */
+                .scrollbar-thin {
+                    scrollbar-gutter: stable;
+                }
+            `}</style>
+        </>
+    );
 }

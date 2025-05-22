@@ -16,11 +16,13 @@ export async function POST(req: Request) {
 
         // Get the friend request
         const friendRequest = await db.friendRequest.findUnique({
-            where: { id: requestId }
+            where: { id: requestId },
         });
 
         if (!friendRequest) {
-            return new NextResponse("Friend request not found", { status: 404 });
+            return new NextResponse("Friend request not found", {
+                status: 404,
+            });
         }
 
         // Verify the current user is the receiver
@@ -30,7 +32,7 @@ export async function POST(req: Request) {
 
         // Delete the friend request
         await db.friendRequest.delete({
-            where: { id: requestId }
+            where: { id: requestId },
         });
 
         return NextResponse.json({ message: "Friend request declined" });

@@ -5,31 +5,31 @@ import MobileNavigationWrapper from "@/components/MobileNavigationWrapper";
 import LoadingBar from "@/app/loader";
 
 export default async function UsersLayout({
-  children,
+    children,
 }: {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }) {
-  const conversations = (await getConversations()).map(conversation => ({
-    ...conversation,
-    isGroup: !!conversation.isGroup,
-    users: conversation.users.map(user => ({
-      ...user,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }))
-  }));
+    const conversations = (await getConversations()).map((conversation) => ({
+        ...conversation,
+        isGroup: !!conversation.isGroup,
+        users: conversation.users.map((user) => ({
+            ...user,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        })),
+    }));
 
-  return (
-    <>
-      <LoadingBar />
-      <Sidebar>
-        <MobileNavigationWrapper>
-          <div className="h-full">
-            <FriendList conversations={conversations} />
-          </div>
-          {children}
-        </MobileNavigationWrapper>
-      </Sidebar>
-    </>
-  );
+    return (
+        <>
+            <LoadingBar />
+            <Sidebar>
+                <MobileNavigationWrapper>
+                    <div className="h-full">
+                        <FriendList conversations={conversations} />
+                    </div>
+                    {children}
+                </MobileNavigationWrapper>
+            </Sidebar>
+        </>
+    );
 }

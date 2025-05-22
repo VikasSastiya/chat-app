@@ -16,11 +16,13 @@ export async function POST(req: Request) {
 
         // Get the friend request
         const friendRequest = await db.friendRequest.findUnique({
-            where: { id: requestId }
+            where: { id: requestId },
         });
 
         if (!friendRequest) {
-            return new NextResponse("Friend request not found", { status: 404 });
+            return new NextResponse("Friend request not found", {
+                status: 404,
+            });
         }
 
         // Verify the current user is the receiver
@@ -33,12 +35,12 @@ export async function POST(req: Request) {
             db.friendship.create({
                 data: {
                     userId1: friendRequest.senderId,
-                    userId2: friendRequest.receiverId
-                }
+                    userId2: friendRequest.receiverId,
+                },
             }),
             db.friendRequest.delete({
-                where: { id: requestId }
-            })
+                where: { id: requestId },
+            }),
         ]);
 
         return NextResponse.json({ message: "Friend request accepted" });

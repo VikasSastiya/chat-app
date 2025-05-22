@@ -1,162 +1,180 @@
-"use client"
+"use client";
 
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo } from "react";
 import { FullConversationType, User } from "@/types";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import clsx from "clsx";
-import Avatar from '@/components/sidebar/Avatar';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { format } from 'date-fns';
-import axios from 'axios';
-import AvatarGroup from './AvatarGroup';
-import nProgress from 'nprogress';
+import Avatar from "@/components/sidebar/Avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { format } from "date-fns";
+import axios from "axios";
+import AvatarGroup from "./AvatarGroup";
+import nProgress from "nprogress";
 
 interface UserBoxProps {
-  data: User & { isGroup?: boolean };
-  conversations: FullConversationType[];
-  selected: boolean;
+    data: User & { isGroup?: boolean };
+    conversations: FullConversationType[];
+    selected: boolean;
 }
 
 const UserBox: React.FC<UserBoxProps> = ({ data, conversations, selected }) => {
-  const session = useSession();
-  const router = useRouter();
+    const session = useSession();
+    const router = useRouter();
 
-  const conversation = useMemo(() => {
-    if (data.isGroup) {
-      return conversations.find(conv => conv.id === data.id);
-    }
-    
-    return conversations.find(conv => 
-      !conv.isGroup && 
-      conv.users.length === 2 && 
-      conv.users.some(user => user.id === data.id)
-    );
-  }, [conversations, data]);
+    const conversation = useMemo(() => {
+        if (data.isGroup) {
+            return conversations.find((conv) => conv.id === data.id);
+        }
 
-  const lastMessage = useMemo(() => {
-    if (!conversation) return null;
-    const messages = conversation.messages || [];
-    return messages[messages.length - 1];
-  }, [conversation]);
+        return conversations.find(
+            (conv) =>
+                !conv.isGroup &&
+                conv.users.length === 2 &&
+                conv.users.some((user) => user.id === data.id),
+        );
+    }, [conversations, data]);
 
-  const userEmail = useMemo(() => {
-    return session.data?.user?.email;
-  }, [session.data?.user?.email]);
+    const lastMessage = useMemo(() => {
+        if (!conversation) return null;
+        const messages = conversation.messages || [];
+        return messages[messages.length - 1];
+    }, [conversation]);
 
-  const hasSeen = useMemo(() => {
-    if (!lastMessage || !userEmail) return false;
-    return lastMessage.seenBy.some((user) => user.email === userEmail);
-  }, [userEmail, lastMessage]);
+    const userEmail = useMemo(() => {
+        return session.data?.user?.email;
+    }, [session.data?.user?.email]);
 
-  const lastMessageText = useMemo(() => {
-    if (lastMessage?.image) 
-      return "Sent an image";
-    if (lastMessage?.body) 
-      return lastMessage.body.length > 25 ? `${lastMessage.body.substring(0, 25)}...` : lastMessage.body;
-    return "Start a conversation";
-  }, [lastMessage]);
+    const hasSeen = useMemo(() => {
+        if (!lastMessage || !userEmail) return false;
+        return lastMessage.seenBy.some((user) => user.email === userEmail);
+    }, [userEmail, lastMessage]);
 
-  const handleClick = useCallback(async () => {
-    nProgress.start();
-    if (conversation) {
-      router.push(`/conversations/${conversation.id}`);
-      return;
-    }
+    const lastMessageText = useMemo(() => {
+        if (lastMessage?.image) return "Sent an image";
+        if (lastMessage?.body)
+            return lastMessage.body.length > 25
+                ? `${lastMessage.body.substring(0, 25)}...`
+                : lastMessage.body;
+        return "Start a conversation";
+    }, [lastMessage]);
 
-    try {
-      const response = await axios.post('/api/conversations', {
-        userId: data.id,
-        isGroup: false
-      });
-      router.push(`/conversations/${response.data.id}`);
-    } catch (error) {
-      console.error('Error creating conversation:', error);
-      nProgress.done();
-    }
-  }, [data.id, router, conversation]);
+    const handleClick = useCallback(async () => {
+        nProgress.start();
+        if (conversation) {
+            router.push(`/conversations/${conversation.id}`);
+            return;
+        }
 
-  return (
-    <Card
-      data-conversation 
-      className={clsx(
-      "w-full transition-shadow duration-300 ease-in-out hover:shadow-lg",
-      selected && "bg-blue-100"
-    )}>
-      <CardContent className="p-3">
-        <Button
-          variant="ghost"
-          className="relative w-full flex items-center gap-3 p-2 rounded-xl hover:bg-transparent focus:bg-transparent active:bg-transparent"
-          onClick={handleClick}
-        >
-          <div className="mt-0.5 flex items-center justify-center">
-            {data.isGroup ? (
-              <div className="h-12 w-12">
-                <AvatarGroup />
-              </div>
-            ) : (
-              <Avatar 
-                user={{
-                  id: data.id,
-                  name: data.name,
-                  email: data.email,
-                  image: data.image,
-                  createdAt: data.createdAt,
-                  updatedAt: data.updatedAt
-                }}
-                size="large"
-              />
+        try {
+            const response = await axios.post("/api/conversations", {
+                userId: data.id,
+                isGroup: false,
+            });
+            router.push(`/conversations/${response.data.id}`);
+        } catch (error) {
+            console.error("Error creating conversation:", error);
+            nProgress.done();
+        }
+    }, [data.id, router, conversation]);
+
+    return (
+        <Card
+            data-conversation
+            className={clsx(
+                "w-full transition-shadow duration-300 ease-in-out hover:shadow-lg",
+                selected && "bg-blue-100",
             )}
-          </div>
+        >
+            <CardContent className="p-3">
+                <Button
+                    variant="ghost"
+                    className="relative w-full flex items-center gap-3 p-2 rounded-xl hover:bg-transparent focus:bg-transparent active:bg-transparent"
+                    onClick={handleClick}
+                >
+                    <div className="mt-0.5 flex items-center justify-center">
+                        {data.isGroup ? (
+                            <div className="h-12 w-12">
+                                <AvatarGroup />
+                            </div>
+                        ) : (
+                            <Avatar
+                                user={{
+                                    id: data.id,
+                                    name: data.name,
+                                    email: data.email,
+                                    image: data.image,
+                                    createdAt: data.createdAt,
+                                    updatedAt: data.updatedAt,
+                                }}
+                                size="large"
+                            />
+                        )}
+                    </div>
 
-          <div className="min-w-0 flex-1">
-            <div className="focus:outline-none">
-              <div className="flex flex-col items-start">
-                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                  {data.isGroup ? (
-                    <span className="block lg:hidden">
-                      {(conversation?.name || 'Group Chat').length > 20
-                        ? `${(conversation?.name || 'Group Chat').substring(0, 24)}...`
-                        : (conversation?.name || 'Group Chat')}
-                    </span>
-                  ) : (
-                    <span className="block lg:hidden">
-                      {(data.name || 'Unknown User').length > 20
-                        ? `${(data.name || 'Unknown User').substring(0, 24)}...`
-                        : (data.name || 'Unknown User')}
-                    </span>
-                  )}
-                  <span className="hidden lg:block">
-                    {data.isGroup ? (
-                      (conversation?.name || 'Group Chat').length > 15
-                      ? `${(conversation?.name || 'Group Chat').substring(0, 12)}...`
-                      : (conversation?.name || 'Group Chat')
-                    ) : (
-                      (data.name || 'Unknown User').length > 15
-                      ? `${(data.name || 'Unknown User').substring(0, 12)}...`
-                      : (data.name || 'Unknown User')
-                    )}
-                  </span>
-                </p>
-                <p className={clsx(
-                  "truncate text-sm mt-1",
-                  hasSeen ? "text-gray-500" : "text-gray-900 dark:text-gray-300 font-medium"
-                )}>
-                  {lastMessageText}
-                </p>
-              </div>
-              {lastMessage?.createdAt && (
-                <p className="absolute -top-1.5 -right-1 text-xs text-gray-500">
-                  {format(new Date(lastMessage.createdAt), 'p')}
-                </p>
-              )}
-            </div>
-          </div>
-        </Button>
-      </CardContent>
-    </Card>
-  );
+                    <div className="min-w-0 flex-1">
+                        <div className="focus:outline-none">
+                            <div className="flex flex-col items-start">
+                                <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                                    {data.isGroup ? (
+                                        <span className="block lg:hidden">
+                                            {(
+                                                conversation?.name ||
+                                                "Group Chat"
+                                            ).length > 20
+                                                ? `${(conversation?.name || "Group Chat").substring(0, 24)}...`
+                                                : conversation?.name ||
+                                                  "Group Chat"}
+                                        </span>
+                                    ) : (
+                                        <span className="block lg:hidden">
+                                            {(data.name || "Unknown User")
+                                                .length > 20
+                                                ? `${(data.name || "Unknown User").substring(0, 24)}...`
+                                                : data.name || "Unknown User"}
+                                        </span>
+                                    )}
+                                    <span className="hidden lg:block">
+                                        {data.isGroup
+                                            ? (
+                                                  conversation?.name ||
+                                                  "Group Chat"
+                                              ).length > 15
+                                                ? `${(conversation?.name || "Group Chat").substring(0, 12)}...`
+                                                : conversation?.name ||
+                                                  "Group Chat"
+                                            : (data.name || "Unknown User")
+                                                    .length > 15
+                                              ? `${(data.name || "Unknown User").substring(0, 12)}...`
+                                              : data.name || "Unknown User"}
+                                    </span>
+                                </p>
+                                <p
+                                    className={clsx(
+                                        "truncate text-sm mt-1",
+                                        hasSeen
+                                            ? "text-gray-500"
+                                            : "text-gray-900 dark:text-gray-300 font-medium",
+                                    )}
+                                >
+                                    {lastMessageText}
+                                </p>
+                            </div>
+                            {lastMessage?.createdAt && (
+                                <p className="absolute -top-1.5 -right-1 text-xs text-gray-500">
+                                    {format(
+                                        new Date(lastMessage.createdAt),
+                                        "p",
+                                    )}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                </Button>
+            </CardContent>
+        </Card>
+    );
 };
 
 export default UserBox;

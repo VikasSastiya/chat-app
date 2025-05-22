@@ -1,13 +1,13 @@
-import {NextResponse} from "next/server";
+import { NextResponse } from "next/server";
 import getCurrentUser from "@/hooks/users/getCurrentUser";
 import { db } from "@/lib/db";
 import { pusherServer } from "@/lib/pusher";
 
 interface IParams {
-    conversationId?: string
+    conversationId?: string;
 }
 
-export async function POST(request: Request, { params }: { params: IParams } ) {
+export async function POST(request: Request, { params }: { params: IParams }) {
     try {
         const currentUser = await getCurrentUser();
         const { conversationId } = params;
@@ -19,16 +19,16 @@ export async function POST(request: Request, { params }: { params: IParams } ) {
         // Find the existing conversation
         const conversation = await db.conversation.findUnique({
             where: {
-                id: conversationId
+                id: conversationId,
             },
             include: {
                 messages: {
                     include: {
-                        seenBy: true
-                    }
+                        seenBy: true,
+                    },
                 },
-                users: true
-            }
+                users: true,
+            },
         });
 
         if (!conversation) {
@@ -36,42 +36,47 @@ export async function POST(request: Request, { params }: { params: IParams } ) {
         }
 
         // Find last message
-        const lastMessage = conversation.messages[conversation.messages.length - 1];
+        const lastMessage =
+            conversation.messages[conversation.messages.length - 1];
 
         // Ensure lastMessage includes seenIds
         const lastMessageWithSeenIds = {
             ...lastMessage,
-            seenIds: lastMessage.seenBy.map(user => user.id) // Extract seenIds from seenBy
+            seenIds: lastMessage.seenBy.map((user) => user.id), // Extract seenIds from seenBy
         };
 
         // Update seen of last message
         const updatedMessage = await db.message.update({
             where: {
-                id: lastMessage.id
+                id: lastMessage.id,
             },
             include: {
                 sender: true,
-                seenBy: true
+                seenBy: true,
             },
             data: {
                 seenBy: {
                     connect: {
-                        id: currentUser.id
-                    }
-                }
-            }
+                        id: currentUser.id,
+                    },
+                },
+            },
         });
 
-        await pusherServer.trigger(currentUser.email, 'conversation:update', {
+        await pusherServer.trigger(currentUser.email, "conversation:update", {
             id: conversationId,
-            messages: [updatedMessage]
+            messages: [updatedMessage],
         });
 
         if (lastMessageWithSeenIds.seenIds.indexOf(currentUser.id) !== -1) {
             return NextResponse.json(conversation);
         }
 
-        await pusherServer.trigger(conversationId!, 'message:update', updatedMessage);
+        await pusherServer.trigger(
+            conversationId!,
+            "message:update",
+            updatedMessage,
+        );
 
         return NextResponse.json(updatedMessage);
     } catch (error: unknown) {

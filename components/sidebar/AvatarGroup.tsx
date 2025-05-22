@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import React from 'react';
-import { FaUsers } from 'react-icons/fa';
+import React from "react";
+import { FaUsers } from "react-icons/fa";
 
 const AvatarGroup = () => {
     return (

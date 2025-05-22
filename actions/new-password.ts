@@ -12,42 +12,42 @@ export const newPassword = async (
     values: z.infer<typeof NewPasswordSchema>,
     token?: string | null,
 ) => {
-    if(!token) {
+    if (!token) {
         return {
-            error: "Missing Token!"
+            error: "Missing Token!",
         };
     }
 
     const validatedFields = NewPasswordSchema.safeParse(values);
 
-    if(!validatedFields.success) {
+    if (!validatedFields.success) {
         return {
-            error: "Invalid Fields!"
+            error: "Invalid Fields!",
         };
     }
 
     const { password } = validatedFields.data;
     const existingToken = await getPasswordResetTokenByToken(token);
 
-    if(!existingToken) {
+    if (!existingToken) {
         return {
-            error: "Invalid token!"
+            error: "Invalid token!",
         };
     }
 
     const hasExpired = new Date(existingToken.expires) < new Date();
 
-    if(hasExpired) {
+    if (hasExpired) {
         return {
-            error: "token has expired!"
+            error: "token has expired!",
         };
     }
 
     const existingUser = await getUserByEmail(existingToken.email);
 
-    if(!existingUser) {
+    if (!existingUser) {
         return {
-            error: "Email does not exists!"
+            error: "Email does not exists!",
         };
     }
 
@@ -55,20 +55,20 @@ export const newPassword = async (
 
     await db.user.update({
         where: {
-            id: existingUser.id
+            id: existingUser.id,
         },
         data: {
-            password: hashedPassword
-        }
+            password: hashedPassword,
+        },
     });
 
     await db.passwordResetToken.delete({
         where: {
-            id: existingToken.id
-        }
+            id: existingToken.id,
+        },
     });
 
     return {
-        success: "Password updated!"
+        success: "Password updated!",
     };
-}
+};

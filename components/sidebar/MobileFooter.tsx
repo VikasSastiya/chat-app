@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
 import useRoutes from "@/hooks/routes/useRoutes";
 import useCurrentUser from "@/hooks/utils/useCurrentUser";
-import { usePathname } from 'next/navigation';
-import { memo } from 'react';
+import { usePathname } from "next/navigation";
+import { memo } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
 import { useState } from "react";
@@ -17,13 +17,17 @@ const MobileFooter = () => {
     const pathname = usePathname();
 
     // Check if the current route is a specific chat conversation
-    const isInFriendChat = pathname.startsWith('/conversations/') && pathname !== '/conversations' && pathname !== '/conversations/add' && pathname !== '/conversations/requests';
+    const isInFriendChat =
+        pathname.startsWith("/conversations/") &&
+        pathname !== "/conversations" &&
+        pathname !== "/conversations/add" &&
+        pathname !== "/conversations/requests";
 
     return (
         <>
-            <SettingsModal 
-                currentUser={user} 
-                isOpen={isOpen} 
+            <SettingsModal
+                currentUser={user}
+                isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
             />
             {/* Only render the MobileFooter if not in a friend's chat conversation */}
@@ -39,24 +43,27 @@ const MobileFooter = () => {
                             notificationCount={item.notificationCount || 0}
                         />
                     ))}
-                    <div 
+                    <div
                         onClick={() => setIsOpen(true)}
                         className="cursor-pointer hover:opacity-75 transition p-4"
                     >
                         <Avatar className="h-6 w-6">
                             {user?.image ? (
-                                <AvatarImage 
-                                    src={user.image} 
-                                    alt={user.name || ''} 
-                                    style={{ aspectRatio: "1/1" }} 
-                                    className="object-cover" 
+                                <AvatarImage
+                                    src={user.image}
+                                    alt={user.name || ""}
+                                    style={{ aspectRatio: "1/1" }}
+                                    className="object-cover"
                                 />
                             ) : (
                                 <AvatarFallback>
                                     <div className="relative h-full w-full">
                                         <Image
                                             src="/profile-pic.jpg"
-                                            alt={user?.name?.[0]?.toUpperCase() || '?'}
+                                            alt={
+                                                user?.name?.[0]?.toUpperCase() ||
+                                                "?"
+                                            }
                                             fill
                                             sizes="(max-width: 24px) 100vw, 24px"
                                             className="object-cover"
@@ -70,6 +77,6 @@ const MobileFooter = () => {
             )}
         </>
     );
-}
+};
 
 export default memo(MobileFooter);
