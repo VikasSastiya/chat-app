@@ -1,4 +1,5 @@
 "use client";
+import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -33,7 +34,7 @@ const HeroSection: React.FC = () => {
               className="w-[10rem] h-10 mt-4 flex justify-center items-center text-center font-sans font-[400] text-[20px] bg-white rounded-[20px] cursor-pointer"
             >
               {isLoading ? (
-                <div className="w-4 h-4 border-2 border-[#121212] border-t-transparent rounded-full animate-spin" />
+                <Loader className="w-4 h-4 animate-spin" />
               ) : (
                 "Get Started"
               )}

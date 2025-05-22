@@ -21,6 +21,7 @@ import { FormSuccess } from "@/components/form-success";
 import { login } from "@/actions/login";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { Loader } from "lucide-react";
 
 export const LoginForm = () => {
     const searchParams = useSearchParams();
@@ -29,6 +30,7 @@ export const LoginForm = () => {
     const [isPending, startTransition] = useTransition();
     const [error, setError] = useState<string | undefined>("");
     const [success, setSuccess] = useState<string | undefined>("");
+    const [isLoading, setIsLoading] = useState(false);
     const form = useForm<z.infer<typeof LoginSchema>>({
         resolver: zodResolver(LoginSchema),
         defaultValues: {
@@ -40,12 +42,16 @@ export const LoginForm = () => {
     const onSubmit = (values: z.infer<typeof LoginSchema>) => {
         setError("");
         setSuccess("");
+        setIsLoading(true);
         startTransition(() => {
             login(values)
                 .then((data) => {
                     setError(data?.error)
                     setSuccess(data?.success)
                 })
+                .finally(() => {
+                    setIsLoading(false);
+                });
         });
     }
 
@@ -56,7 +62,9 @@ export const LoginForm = () => {
             backButtonHref="/auth/register"
             showSocial
         >
-            <Form {...form}>
+            <Form 
+            
+            {...form}>
                 <form 
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="space-y-6"
@@ -72,9 +80,10 @@ export const LoginForm = () => {
                                     </FormLabel>
                                     <FormControl>
                                         <Input
+                                            className="focus:ring-offset-0 focus:ring-none focus:outline-none  "
                                             {...field}
                                             disabled={isPending}
-                                            placeholder="kuch_bhi_@gamil.com"
+                                            placeholder="enter your email"
                                             type="email" 
                                         />
                                     </FormControl>
@@ -121,6 +130,7 @@ export const LoginForm = () => {
                         type="submit"
                     >
                         Login
+                        {isLoading && <Loader className="w-4 h-4 ml-2 animate-spin" />}
                     </Button>
                 </form>
             </Form>

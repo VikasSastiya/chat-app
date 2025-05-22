@@ -23,7 +23,7 @@ export default async function Home() {
               <div className="max-w-[70rem] mx-auto bg-[#ffffff] rounded-2xl border-[2px] border-white ">
                 <Image
                   className="object-cover p-5 rounded-2xl"
-                  src="/chat-onn.png"
+                  src="https://res.cloudinary.com/dnvl8mqba/image/upload/v1747900844/Chat%20app%C2%A0/38807952-45c1-4434-b039-6ecc7cca41c5.png"
                   alt="chat-onn.png"
                   width={1200}
                   height={800}
