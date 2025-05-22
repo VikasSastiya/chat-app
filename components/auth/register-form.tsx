@@ -1,9 +1,9 @@
 "use client";
 
-import * as z from "zod"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { RegisterSchema } from "@/schemas"
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { RegisterSchema } from "@/schemas";
 import {
     Form,
     FormControl,
@@ -11,42 +11,45 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 import { useState, useTransition } from "react";
-import { CardWrapper } from "@/components/auth/card-wrapper"
+import { CardWrapper } from "@/components/auth/card-wrapper";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { register } from "@/actions/register";
+import { Loader } from "lucide-react";
 
 export const RegisterForm = () => {
-
     const [isPending, startTransition] = useTransition();
     const [error, setError] = useState<string | undefined>("");
     const [success, setSuccess] = useState<string | undefined>("");
+    const [isLoading, setIsLoading] = useState(false);
     const form = useForm<z.infer<typeof RegisterSchema>>({
         resolver: zodResolver(RegisterSchema),
         defaultValues: {
             email: "",
             password: "",
             username: "",
-        }
-    })
+        },
+    });
 
     const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
         setError("");
         setSuccess("");
+        setIsLoading(true);
         startTransition(() => {
             register(values)
                 .then((data) => {
-                    if(data.error)
-                        setError(data.error);
-                    else
-                        setSuccess(data.success);
+                    if (data.error) setError(data.error);
+                    else setSuccess(data.success);
                 })
+                .finally(() => {
+                    setIsLoading(false);
+                });
         });
-    }
+    };
 
     return (
         <CardWrapper
@@ -56,7 +59,7 @@ export const RegisterForm = () => {
             showSocial
         >
             <Form {...form}>
-                <form 
+                <form
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="space-y-6"
                 >
@@ -66,60 +69,54 @@ export const RegisterForm = () => {
                             name="username"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>
-                                        Username
-                                    </FormLabel>
+                                    <FormLabel>Username</FormLabel>
                                     <FormControl>
                                         <Input
                                             {...field}
                                             disabled={isPending}
                                             placeholder="enter your name"
-                                            type="text" 
+                                            type="text"
                                         />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
-                            )} 
+                            )}
                         />
                         <FormField
                             control={form.control}
                             name="email"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>
-                                        Email
-                                    </FormLabel>
+                                    <FormLabel>Email</FormLabel>
                                     <FormControl>
                                         <Input
                                             {...field}
                                             disabled={isPending}
-                                            placeholder="kuch_bhi_@gamil.com"
-                                            type="email" 
+                                            placeholder="enter your email"
+                                            type="email"
                                         />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
-                            )} 
+                            )}
                         />
                         <FormField
                             control={form.control}
                             name="password"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>
-                                        Password
-                                    </FormLabel>
+                                    <FormLabel>Password</FormLabel>
                                     <FormControl>
                                         <Input
                                             {...field}
                                             disabled={isPending}
                                             placeholder="******"
-                                            type="password" 
+                                            type="password"
                                         />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
-                            )} 
+                            )}
                         />
                     </div>
                     <FormError message={error} />
@@ -130,9 +127,12 @@ export const RegisterForm = () => {
                         type="submit"
                     >
                         Create an account
+                        {isLoading && (
+                            <Loader className="w-4 h-4 ml-2 animate-spin" />
+                        )}
                     </Button>
                 </form>
             </Form>
         </CardWrapper>
-    )
-}
+    );
+};

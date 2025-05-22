@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+  <img src="https://res.cloudinary.com/dnvl8mqba/image/upload/v1747900058/Chat%20app%C2%A0/logo1_xfymts.png" alt="Chat App" width="50"/>
+  
+  # Chat App
+  # Modern Chat Application
+  
+  <p>A real-time messaging platform for seamless communication</p>
+  <p>Made with ❤️ by Shilesh</p>
+  
+  ![License](https://img.shields.io/badge/license-MIT-blue)
+  ![Status](https://img.shields.io/badge/status-active-brightgreen)
+  
+</div>
 
-## Getting Started
+## 👥 Contributors
 
-First, run the development server:
+<a href="https://github.com/AshutoshDM1">
+  <img src="https://github.com/AshutoshDM1.png" width="50px" alt="Ashutosh" style="border-radius:50%" />
+</a>
+<a href="https://github.com/shilesh-rk">
+  <img src="https://github.com/ShaileshIshere.png" width="50px" alt="Shilesh" style="border-radius:50%" />
+</a>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+  
+![Repo Stats](https://repobeats.axiom.co/api/embed/f2426b81a1794f1484923e6f0bc56260824c0ea7.svg "Repobeats analytics image")
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ✨ Overview
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+A modern real-time chat application that enables seamless communication through an intuitive and responsive interface. Built with the latest web technologies to provide a smooth and engaging messaging experience.
 
-## Learn More
+## 🚀 Features
 
-To learn more about Next.js, take a look at the following resources:
+- **Real-time Messaging**: Instant message delivery and updates
+- **User Authentication**: Secure login and registration system
+- **Responsive Design**: Works seamlessly across all devices
+- **User Profiles**: Customizable user profiles and avatars
+- **Message History**: Access to chat history and search functionality
+- **Online Status**: Real-time user presence indicators
+- **File Sharing**: Support for sharing images and files
+- **Emoji Support**: Rich emoji picker for expressive communication
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Frontend
 
-## Deploy on Vercel
+- ![Next.js](https://img.shields.io/badge/-Next.js-000000?style=flat-square&logo=next.js&logoColor=white) **Next.js**: React framework for server-side rendering
+- ![React](https://img.shields.io/badge/-React-61DAFB?style=flat-square&logo=react&logoColor=black) **React**: UI component library
+- ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white) **TypeScript**: Type-safe JavaScript
+- ![Tailwind CSS](https://img.shields.io/badge/-Tailwind_CSS-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white) **Tailwind CSS**: Utility-first CSS framework
+- ![Socket.io](https://img.shields.io/badge/-Socket.io-010101?style=flat-square&logo=socket.io&logoColor=white) **Socket.io**: Real-time bidirectional communication
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Backend
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- ![Node.js](https://img.shields.io/badge/-Node.js-339933?style=flat-square&logo=node.js&logoColor=white) **Node.js**: Runtime environment
+- ![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-336791?style=flat-square&logo=postgresql&logoColor=white) **PostgreSQL**: Database for message and user data storage
+- ![Prisma](https://img.shields.io/badge/-Prisma-2D3748?style=flat-square&logo=prisma&logoColor=white) **Prisma**: Modern database ORM
+- ![Redis](https://img.shields.io/badge/-Redis-DC382D?style=flat-square&logo=redis&logoColor=white) **Redis**: In-memory data store for real-time features
+
+Screenshot:
+![Screenshot](https://res.cloudinary.com/dnvl8mqba/image/upload/v1747900071/Chat%20app%C2%A0/image1_bfwzxm.png)
+![Screenshot](https://res.cloudinary.com/dnvl8mqba/image/upload/v1747900070/Chat%20app%C2%A0/image2_flt7ju.png)
+![Screenshot](https://res.cloudinary.com/dnvl8mqba/image/upload/v1747900069/Chat%20app%C2%A0/image3_k0scfh.png)
+![Screenshot](https://res.cloudinary.com/dnvl8mqba/image/upload/v1747900844/Chat%20app%C2%A0/38807952-45c1-4434-b039-6ecc7cca41c5.png)
+
+## 🔧 Getting Started
+
+### Prerequisites
+
+- Node.js (v16+)
+- PostgreSQL
+- Git
+
+
+## 📝 License
+
+This project is licensed under the MIT License

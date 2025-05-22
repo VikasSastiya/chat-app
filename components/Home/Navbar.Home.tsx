@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
+import { Loader } from "lucide-react";
 
 const Navbar: React.FC = () => {
   const router = useRouter();
@@ -23,7 +24,7 @@ const Navbar: React.FC = () => {
               height={33}
               priority
             />
-            Supermi
+            Chat App
           </div>
           <div className="font-[300] letter- text-[14px] cursor-pointer hidden md:flex justify-between w-[50%] ">
             <h1>Home</h1>
@@ -38,7 +39,7 @@ const Navbar: React.FC = () => {
               className="h-full w-16 font-[600] text-[15px] text-[#000] cursor-pointer bg-slate-50 px-[17px]  rounded-[30px] flex justify-center items-center gap-2"
             >
               {isLoading ? (
-                <div className="w-4 h-4 border-2 border-[#121212] border-t-transparent rounded-full animate-spin" />
+                <Loader className="w-4 h-4 animate-spin" />
               ) : (
                 "Login"
               )}
