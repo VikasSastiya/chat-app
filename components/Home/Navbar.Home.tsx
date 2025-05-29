@@ -13,12 +13,12 @@ const Navbar: React.FC = () => {
     };
     return (
         <>
-            <div className="h-[4.5vh] w-full flex justify-center items-center select-none ">
+            <div className="h-[5vh] w-full flex justify-center items-center select-none ">
                 <div className="h-full max-w-[43rem] mx-auto w-full flex justify-between items-center px-1 py-1 bg-[#000] text-white rounded-[25px] ">
-                    <div className="font-[500] text-[20px] font-[Mona Sans] flex justify-center items-center gap-1 pl-2  cursor-pointer">
+                    <div className="font-[500] text-[20px] font-[Mona Sans] flex justify-center items-center gap-2 pl-2 cursor-pointer">
                         <Image
                             className="object-cover w-[33px]"
-                            src="/logo1.png"
+                            src="/MessageHub-logo.png"
                             alt="logo"
                             width={33}
                             height={33}

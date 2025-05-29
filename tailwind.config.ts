@@ -7,6 +7,7 @@ const config: Config = {
         "./components/**/*.{js,ts,jsx,tsx,mdx}",
         "./app/**/*.{js,ts,jsx,tsx,mdx}",
     ],
+    
     theme: {
         extend: {
             colors: {
@@ -85,8 +86,17 @@ const config: Config = {
                     "0%": { transform: "translateX(0%)" },
                     "100%": { transform: "translateX(100%)" },
                 },
+                'shiny-text': {
+                    '0%, 90%, 100%': {
+                        backgroundPosition: 'calc(-100% - var(--shiny-width)) 0'
+                    },
+                    '30%, 60%': {
+                        backgroundPosition: 'calc(100% + var(--shiny-width)) 0'
+                    }
+                }
             },
             animation: {
+                
                 shimmer: "shimmer 2s linear infinite",
                 fadeIn: "fadeIn 0.3s ease-in-out",
                 slideUp: "slideUp 0.3s ease-out",
@@ -94,6 +104,7 @@ const config: Config = {
                 marquee2: "marquee2 25s linear infinite",
                 "marquee-reverse": "marquee-reverse 25s linear infinite",
                 "marquee2-reverse": "marquee2-reverse 25s linear infinite",
+                'shiny-text': 'shiny-text 8s infinite'
             },
             transitionDuration: {
                 "2000": "2000ms",

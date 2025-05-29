@@ -13,7 +13,8 @@ export const metadata: Metadata = {
     title: "ChatApp",
     description: "ChatApp - The Ultimate Chat App",
     icons: {
-        icon: "https://res.cloudinary.com/dnvl8mqba/image/upload/v1747900058/Chat%20app%C2%A0/logo1_xfymts.png",
+        // icon: "https://res.cloudinary.com/dnvl8mqba/image/upload/v1747900058/Chat%20app%C2%A0/logo1_xfymts.png",
+        icon: "/MessageHub-logo.png",
     },
 };
 
