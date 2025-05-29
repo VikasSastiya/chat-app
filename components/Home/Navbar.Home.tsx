@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
                             height={33}
                             priority
                         />
-                        Chat App
+                        MessageHub
                     </div>
                     <div className="font-[300] letter- text-[14px] cursor-pointer hidden md:flex justify-between w-[50%] ">
                         <h1>Home</h1>
