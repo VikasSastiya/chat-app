@@ -8,7 +8,7 @@ const APP_NAME = "MessageHub";
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
     const resetLink = `${domain}/auth/new-password?token=${token}`;
-    const logoUrl = `${domain}/MessageHub-logo.png`;
+    const logoUrl = '/MessageHub-logo.png';
 
     const htmlTemplate = `
     <!DOCTYPE html>
@@ -66,7 +66,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
     </html>`;
 
     await resend.emails.send({
-        from: `${APP_NAME} <noreply@MessageHub.in>`,
+        from: "MessageHub@xlnce.xyz",
         to: email,
         subject: `🔐 Reset your ${APP_NAME} password`,
         html: htmlTemplate,
@@ -75,7 +75,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
 
 export const sendVerificationEmail = async (email: string, token: string) => {
     const confirmLink = `${domain}/auth/new-verification?token=${token}`;
-    const logoUrl = `${domain}/MessageHub-logo.png`;
+    const logoUrl = '/MessageHub-logo.png';
 
     const htmlTemplate = `
     <!DOCTYPE html>
@@ -138,7 +138,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
 
     try {
         const response = await resend.emails.send({
-            from: `${APP_NAME} <welcome@MessageHub.in>`,
+            from: "MessageHub@xlnce.xyz",
             to: email,
             subject: `🎉 Welcome to ${APP_NAME} - Verify your email`,
             html: htmlTemplate,
