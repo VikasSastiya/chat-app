@@ -6,6 +6,7 @@ import AuthContext from "@/components/context/AuthContext";
 import ToasterContext from "@/components/context/ToasterContext";
 import ActiveStatus from "@/components/ActiveStatus";
 import LoadingBar from "./loader";
+import { ThemeProvider } from "next-themes";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,14 +33,21 @@ export default function RootLayout({
                 />
             </head>
             <body className={inter.className}>
-                <LoadingBar />
-                <Providers>
-                    <AuthContext>
-                        <ToasterContext />
-                        <ActiveStatus />
-                        {children}
-                    </AuthContext>
-                </Providers>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="dark"  
+                    enableSystem={true}
+                    disableTransitionOnChange
+                >
+                    <LoadingBar />
+                    <Providers>
+                        <AuthContext>
+                            <ToasterContext />
+                            <ActiveStatus />
+                            {children}
+                        </AuthContext>
+                    </Providers>
+                </ThemeProvider>
             </body>
         </html>
     );

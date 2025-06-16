@@ -5,10 +5,10 @@ const domain = process.env.NEXT_PUBLIC_APP_URL;
 
 // Choose your preferred app name from suggestions above
 const APP_NAME = "MessageHub"; 
+const LOGO_URL = "https://res.cloudinary.com/ddu8stsgr/image/upload/v1750093498/MessageHub-logo_w6iuge.png";
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
     const resetLink = `${domain}/auth/new-password?token=${token}`;
-    const logoUrl = '/MessageHub-logo.png';
 
     const htmlTemplate = `
     <!DOCTYPE html>
@@ -22,7 +22,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
             <!-- Header -->
             <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center;">
                 <div style="margin: 0 auto 20px;">
-                    <img src="${logoUrl}" alt="${APP_NAME}" width="80" height="80" style="display: block; margin: 0 auto;">
+                    <img src="${LOGO_URL}" alt="${APP_NAME}" width="80" height="80" style="display: block; margin: 0 auto; max-width: 80px; height: auto; border: none;">
                 </div>
                 <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 600;">${APP_NAME}</h1>
                 <p style="color: rgba(255, 255, 255, 0.9); margin: 10px 0 0; font-size: 16px;">Password Reset Request</p>
@@ -75,7 +75,6 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
 
 export const sendVerificationEmail = async (email: string, token: string) => {
     const confirmLink = `${domain}/auth/new-verification?token=${token}`;
-    const logoUrl = '/MessageHub-logo.png';
 
     const htmlTemplate = `
     <!DOCTYPE html>
@@ -89,7 +88,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
             <!-- Header -->
             <div style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); padding: 40px 20px; text-align: center;">
                 <div style="margin: 0 auto 20px;">
-                    <img src="${logoUrl}" alt="${APP_NAME}" width="80" height="80" style="display: block; margin: 0 auto;">
+                    <img src="${LOGO_URL}" alt="${APP_NAME}" width="80" height="80" style="display: block; margin: 0 auto; max-width: 80px; height: auto; border: none;">
                 </div>
                 <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 600;">${APP_NAME}</h1>
                 <p style="color: rgba(255, 255, 255, 0.9); margin: 10px 0 0; font-size: 16px;">Welcome to the community!</p>

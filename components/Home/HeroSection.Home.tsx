@@ -11,7 +11,13 @@ const HeroSection: React.FC = () => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [typedText, setTypedText] = useState("");
+    const [isMounted, setIsMounted] = useState(false);
     const textToType = "Messaging WebApp";
+    
+    // Hydration fix
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
     
     // Typing animation effect
     useEffect(() => {
@@ -28,6 +34,20 @@ const HeroSection: React.FC = () => {
         setIsLoading(true);
         router.push("/auth/login");
     };
+    
+    // Only render AnimatedShinyText after hydration
+    if (!isMounted) {
+        return (
+            <div className="z-10 flex mt-14 items-center justify-center">
+                <div className="group rounded-full border border-white/5 bg-neutral-100 text-base text-black transition-all ease-in hover:cursor-pointer hover:bg-neutral-200 dark:border-white/5 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+                    <div className="inline-flex items-center justify-center px-4 py-2 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400 gap-2">
+                        <span className="font-semibold">✨ Unlock Conversational Power</span>
+                        <ArrowRightIcon className="ml-1 size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+                    </div>
+                </div>
+            </div>
+        );
+    }
     
     return (
         <>
