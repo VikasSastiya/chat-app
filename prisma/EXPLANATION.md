@@ -46,4 +46,12 @@ Or track verification history.
 
 ##   updatedAt     DateTime  @updatedAt
 
-### Whenever you update something (like changing a user's name, password, etc.), Prisma will automatically set updatedAt to the current date and time.
+Whenever you update something (like changing a user's name, password, etc.), Prisma will automatically set updatedAt to the current date and time.
+
+## ✅ Meaning of Each Part:
+
+updatedAt: Field name — stores the date and time the record was last updated.
+
+DateTime: Data type — stores date and time.
+
+@updatedAt: A Prisma special attribute that automatically updates this field every time the row is updated (changed).
