@@ -43,3 +43,7 @@ You want to show: "Email verified on June 24, 2025".
 Or you want to allow access only if email was verified within 24 hours.
 
 Or track verification history.
+
+##   updatedAt     DateTime  @updatedAt
+
+### Whenever you update something (like changing a user's name, password, etc.), Prisma will automatically set updatedAt to the current date and time.
