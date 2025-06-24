@@ -32,3 +32,14 @@ model User {
   id String @id
   @@map("users") // Table is called "users", but model is "User"
 }
+
+
+### Why use DateTime?
+
+Because it helps you know when the email was verified. For example:
+
+You want to show: "Email verified on June 24, 2025".
+
+Or you want to allow access only if email was verified within 24 hours.
+
+Or track verification history.
