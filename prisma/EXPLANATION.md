@@ -9,6 +9,15 @@ It is the primary key (@id)
 Its value is automatically generated using cuid() when a new user is created
 
 
+### Why @default is used?
+
+It tells Prisma:
+"If user doesn't give a value for id, generate one automatically using cuid()."
+
+So you don't have to manually assign ids.
+
+
+
 ## emailVerified DateTime? @map("email_verified")
 
 ### @map() tells Prisma:
